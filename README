@@ -1,0 +1,16 @@
+----------------------------------------------------------------------------
+                     GtkBuilder + Inline JavaScript
+----------------------------------------------------------------------------
+
+This is a quick hack to allow writing javascript inside of a GtkBuilder xml
+file and attaching signals to said javascript functions.
+
+GScriptJs is an object that can be created from within the GtkBuilder file.
+The "script" property is used to eval javascript into the JSContext.
+
+Use a connect callback similar to connect_func in script.c.
+
+Cheers, and Happy Hacking,
+
+--
+Christian Hergert <chris@dronelabs.com>

@@ -1,0 +1,23 @@
+<glade-catalog name="g-script-js" library="glade-g-script-js" icon-prefix="js">
+  <init-function>glade_g_script_js_init</init-function>
+  <glade-widget-classes>
+    <glade-widget-class toplevel="True" name="GScriptJs" generic-name="g_script_js" title="Script">
+      <create-editor-property-function>glade_g_script_js_create_eprop</create-editor-property-function>
+      <set-property-function>glade_g_script_js_set_property</set-property-function>
+      <!--
+      <post-create-function>glade_g_script_js_post_create</post-create-function>
+      <create-editable-function>glade_g_script_js_create_editable</create-editable-function>
+      <read-widget-function>glade_g_script_js_read_widget</read-widget-function>
+      <write-widget-function>glade_g_script_js_write_widget</write-widget-function>
+      <string-from-value-function>glade_g_script_js_string_from_value</string-from-value-function>
+      -->
+      <properties>
+      	<property id="script" custom-layout="False"/>
+      	<property id="source" custom-layout="False" multiline="True"/>
+      </properties>
+    </glade-widget-class>
+  </glade-widget-classes>
+  <glade-widget-group name="g-script-js" title="Script">
+    <glade-widget-class-ref name="GScriptJs"/>
+  </glade-widget-group>
+</glade-catalog>
