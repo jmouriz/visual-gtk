@@ -38,7 +38,7 @@ typedef struct _GScriptJsEditorPrivate GScriptJsEditorPrivate;
 
 struct _GScriptJsEditor
 {
-  GtkBox parent;
+  GtkFrame parent;
 
   /*< private >*/
   GScriptJsEditorPrivate *priv;
@@ -46,7 +46,7 @@ struct _GScriptJsEditor
 
 struct _GScriptJsEditorClass
 {
-  GtkBoxClass parent_class;
+  GtkFrameClass parent_class;
 };
 
 GType            g_script_js_editor_get_type      (void) G_GNUC_CONST;

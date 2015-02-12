@@ -1,7 +1,7 @@
 <glade-catalog name="g-script-js" library="glade-g-script-js" icon-prefix="js">
   <init-function>glade_g_script_js_init</init-function>
   <glade-widget-classes>
-    <glade-widget-class toplevel="True" name="GScriptJs" generic-name="g_script_js" title="Script">
+    <glade-widget-class toplevel="True" name="GScriptJs" generic-name="script" title="Script">
       <create-editor-property-function>glade_g_script_js_create_eprop</create-editor-property-function>
       <set-property-function>glade_g_script_js_set_property</set-property-function>
       <!--

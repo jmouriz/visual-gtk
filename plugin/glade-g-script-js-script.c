@@ -68,8 +68,7 @@ glade_eprop_script_create_input (GladeEditorProperty *eprop)
 
   g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
   
-  editor = gtk_entry_new (); // XXX GtkFileChooserButton
-  gtk_entry_set_placeholder_text (GTK_ENTRY (editor), "script");
+  editor = gtk_file_chooser_button_new ("Choose script", GTK_FILE_CHOOSER_ACTION_OPEN);
 
   gtk_widget_show_all (editor);
 

@@ -57,7 +57,7 @@ typedef struct _Data
 
 #define DATA(object) ((Data *) (object))
 
-G_DEFINE_TYPE (GScriptJsEditor, g_script_js_editor, GTK_TYPE_BOX);
+G_DEFINE_TYPE (GScriptJsEditor, g_script_js_editor, GTK_TYPE_FRAME);
 
 static void
 g_script_js_editor_class_init (GScriptJsEditorClass *klass)
@@ -111,8 +111,6 @@ g_script_js_editor_init (GScriptJsEditor *editor)
 
   editor->priv = G_TYPE_INSTANCE_GET_PRIVATE ((editor), G_TYPE_SCRIPT_JS_EDITOR, GScriptJsEditorPrivate);
 
-  gtk_orientable_set_orientation (GTK_ORIENTABLE (editor), GTK_ORIENTATION_VERTICAL);
-
   manager = gtk_source_language_manager_get_default ();
   language = gtk_source_language_manager_get_language (manager, "js");
 
@@ -128,6 +126,7 @@ GtkWidget *
 g_script_js_editor_new (void)
 {
   //GtkWidget *combo;
+  GtkWidget *box;
   GtkWidget *area;
   GtkCellRenderer *cell;
   GScriptJsEditor *editor;
@@ -137,6 +136,8 @@ g_script_js_editor_new (void)
   data = (Data *) g_malloc (sizeof (Data));
   editor = (GScriptJsEditor *) g_object_new (G_TYPE_SCRIPT_JS_EDITOR, NULL);
   data->priv = editor->priv;
+
+  box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
 
   data->combo = gtk_combo_box_new_with_model (GTK_TREE_MODEL (data->priv->store));
 
@@ -171,9 +172,10 @@ g_script_js_editor_new (void)
   gtk_source_view_set_right_margin_position (GTK_SOURCE_VIEW (data->editor), 80);
   //gtk_source_view_set_smart_home_end (GTK_SOURCE_VIEW (data->editor), TRUE);
   
-  gtk_container_add (GTK_CONTAINER (editor), data->combo);
+  gtk_box_pack_start (GTK_BOX (box), data->combo, FALSE, FALSE, 0);
   gtk_container_add (GTK_CONTAINER (area), data->editor);
-  gtk_box_pack_start (GTK_BOX (editor), area, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (box), area, TRUE, TRUE, 0);
+  gtk_container_add (GTK_CONTAINER (editor), box);
 
   gtk_widget_grab_focus (data->editor);
  
