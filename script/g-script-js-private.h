@@ -27,8 +27,8 @@ struct _GScriptJsPrivate
 {
   GjsContext *context;
 
-  gchar *script;
-  gchar *source;
+  gchar *filename;
+  gchar *javascript;
 
   GSList *functions;
 };

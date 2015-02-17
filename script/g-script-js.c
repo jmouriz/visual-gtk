@@ -31,8 +31,8 @@
 enum
 {
   PROP_0,
-  PROP_SCRIPT,
-  PROP_SOURCE,
+  PROP_FILENAME,
+  PROP_JAVASCRIPT,
   PROP_LAST
 };
 
@@ -42,9 +42,9 @@ static void     gtk_buildable_init               (GtkBuildableIface *);
 
 static gboolean g_script_js_introspect_functions (GScriptJs *);
 
-static void     g_script_js_script_free          (GScriptJs *);
+static void     g_script_js_filename_free        (GScriptJs *);
 
-static void     g_script_js_source_free          (GScriptJs *);
+static void     g_script_js_javascript_free      (GScriptJs *);
 
 G_DEFINE_TYPE_WITH_CODE(GScriptJs, g_script_js, G_TYPE_OBJECT,
                         G_IMPLEMENT_INTERFACE(GTK_TYPE_BUILDABLE,
@@ -63,10 +63,10 @@ G_DEFINE_TYPE_WITH_CODE(GScriptJs, g_script_js, G_TYPE_OBJECT,
 static void
 g_script_js_finalize (GObject *object)
 {
-  GScriptJs *g_script_js = G_SCRIPT_JS (object);
-  GScriptJsPrivate *priv = g_script_js->priv;
+  GScriptJs *script = G_SCRIPT_JS (object);
+  GScriptJsPrivate *priv = script->priv;
 
-  g_script_js_script_free (g_script_js);
+  g_script_js_free (script);
 
   g_clear_object (&priv->context);
 
@@ -74,9 +74,9 @@ g_script_js_finalize (GObject *object)
 }
 
 static void
-g_script_js_functions_free (GScriptJs *js)
+g_script_js_functions_free (GScriptJs *script)
 {
-  GScriptJsPrivate *priv = js->priv;
+  GScriptJsPrivate *priv = script->priv;
 
   if (priv->functions)
   {
@@ -85,43 +85,47 @@ g_script_js_functions_free (GScriptJs *js)
   }
 }
 
-static void
-g_script_js_script_free (GScriptJs *js)
-{
-  GScriptJsPrivate *priv = js->priv;
+/* estas dos funciones me hacen un poco de ruido */
 
-  if (priv->script)
+static void
+g_script_js_filename_free (GScriptJs *script)
+{
+  GScriptJsPrivate *priv = script->priv;
+
+  if (priv->filename)
   {
-    g_free (priv->script);
+    g_free (priv->filename);
   }
 
-  g_script_js_functions_free (js);
+  g_script_js_functions_free (script);
 }
 
 static void
-g_script_js_source_free (GScriptJs *js)
+g_script_js_javascript_free (GScriptJs *script)
 {
-  GScriptJsPrivate *priv = js->priv;
+  GScriptJsPrivate *priv = script->priv;
 
-  if (priv->source)
+  if (priv->javascript)
   {
-    g_free (priv->source);
+    g_free (priv->javascript);
   }
+
+  g_script_js_functions_free (script);
 }
 
 /*
  * TODO
  */
 void
-g_script_js_free (GScriptJs *js)
+g_script_js_free (GScriptJs *script)
 {
-  if (!js) return;
+  if (!script) return;
 
-  g_return_if_fail (G_IS_SCRIPT_JS (js));
+  g_return_if_fail (G_IS_SCRIPT_JS (script));
 
-  g_script_js_source_free (js);
+  g_script_js_javascript_free (script);
 
-  g_script_js_script_free (js);
+  g_script_js_filename_free (script);
 }
 
 /**
@@ -132,9 +136,11 @@ g_script_js_free (GScriptJs *js)
  * TODO
  *
  * Returns: A #GClosure.
+ *
+ * Esta es la función mágica de Christian
  */
 GClosure *
-g_script_js_get_closure (GScriptJs *js, const gchar *function)
+g_script_js_get_closure (GScriptJs *script, const gchar *function)
 {
   GScriptJsPrivate *priv;
   JSContext *context;
@@ -144,10 +150,10 @@ g_script_js_get_closure (GScriptJs *js, const gchar *function)
   JSBool success;
   jsval value = { 0 };
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS (js), NULL);
+  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
 
   callable = NULL;
-  priv = js->priv;
+  priv = script->priv;
   context = (JSContext *) gjs_context_get_native_context (priv->context);
 
   g_assert (context);
@@ -184,54 +190,55 @@ g_script_js_get_closure (GScriptJs *js, const gchar *function)
  * TODO
  */
 gboolean
-g_script_js_set_script (GScriptJs *g_script_js, const gchar *script)
+g_script_js_set_javascript (GScriptJs *script, const gchar *javascript)
 {
   GScriptJsPrivate *priv;
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS (g_script_js), FALSE);
-  g_return_val_if_fail (script != NULL, FALSE);
+  g_return_val_if_fail (G_IS_SCRIPT_JS (script), FALSE);
+  g_return_val_if_fail (javascript != NULL, FALSE);
 
-  priv = g_script_js->priv;
+  priv = script->priv;
 
-  g_script_js_script_free (g_script_js);
+  g_script_js_javascript_free (script);
 
-  priv->script = g_strdup (script);
+  priv->javascript = g_strdup (javascript);
 
-  return g_script_js_introspect_functions (g_script_js);
+  return g_script_js_introspect_functions (script);
 }
 
 /*
- * TODO split in set_source and load_source
+ * TODO split in set_script and load_script
  */
 gboolean
-g_script_js_set_source (GScriptJs *g_script_js, const gchar *source)
+g_script_js_set_filename (GScriptJs *script, const gchar *filename)
 {
   GScriptJsPrivate *priv;
   GFile *file;
   GError *error;
   gboolean success;
-  char *script;
+  char *javascript;
   gsize length;
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS (g_script_js), FALSE);
-  g_return_val_if_fail (source != NULL, FALSE);
+  g_return_val_if_fail (G_IS_SCRIPT_JS (script), FALSE);
+  g_return_val_if_fail (filename != NULL, FALSE);
 
-  priv = g_script_js->priv;
+  priv = script->priv;
 
-  file = g_file_new_for_path (source);
+  file = g_file_new_for_path (filename);
   error = NULL;
 
-  success = g_file_load_contents (file, NULL, &script, &length, NULL, &error);
+  success = g_file_load_contents (file, NULL, &javascript, &length, NULL, &error);
 
   if (success)
   {
-    success = g_script_js_set_script (g_script_js, script);
+    success = g_script_js_set_javascript (script, javascript);
 
-    g_script_js_source_free (g_script_js);
+    g_script_js_javascript_free (script);
 
-    priv->source = g_strdup (source);
+    priv->filename = g_strdup (filename);
+    priv->javascript = g_strdup (javascript);
 
-    g_free (script);
+    g_free (javascript);
   }
   else
   {
@@ -247,7 +254,7 @@ g_script_js_set_source (GScriptJs *g_script_js, const gchar *source)
  * TODO
  */
 gboolean
-g_script_js_save (GScriptJs *g_script_js)
+g_script_js_save (GScriptJs *script)
 {
   return FALSE;
 }
@@ -256,55 +263,56 @@ g_script_js_save (GScriptJs *g_script_js)
  * TODO
  */
 gchar * /* const */
-g_script_js_get_script (GScriptJs *g_script_js)
+g_script_js_get_filename (GScriptJs *script)
 {
-  g_return_val_if_fail (G_IS_SCRIPT_JS (g_script_js), NULL);
+  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
 
-  return g_script_js->priv->script;
+  return script->priv->filename;
 }
  
 /*
  * TODO
  */
 gchar *
-g_script_js_get_source (GScriptJs *g_script_js)
+g_script_js_get_javascript (GScriptJs *script)
 {
-  g_return_val_if_fail (G_IS_SCRIPT_JS (g_script_js), NULL);
+  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
 
-  return g_script_js->priv->source;
+  return script->priv->javascript;
 }
 
 /*
  * TODO
  */
 GSList *
-g_script_js_get_functions (GScriptJs *g_script_js)
+g_script_js_get_functions (GScriptJs *script)
 {
-  g_return_val_if_fail (G_IS_SCRIPT_JS (g_script_js), NULL);
+  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
 
-  return g_script_js->priv->functions;
+  return script->priv->functions;
 }
  
 /*
  * TODO
  */
 gboolean
-g_script_js_evaluate (GScriptJs *g_script_js)
+g_script_js_evaluate (GScriptJs *script)
 {
   GError *error;
   gboolean success;
   glong length;
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS (g_script_js), FALSE);
+  g_return_val_if_fail (G_IS_SCRIPT_JS (script), FALSE);
 
   error = NULL;
-  length = g_utf8_strlen (g_script_js->priv->script, G_MAXLONG);
+  length = g_utf8_strlen (script->priv->javascript, G_MAXLONG);
 
-  success = gjs_context_eval (g_script_js->priv->context, g_script_js->priv->script, length, "__gtk_builder__", NULL, &error);
+  success = gjs_context_eval (script->priv->context, script->priv->javascript, length, "__gtk_builder__", NULL, &error);
 
   if (!success)
   {
-    g_critical ("%s", error->message);
+    g_debug ("%s", error->message);
+
     g_error_free (error);
 
     return FALSE;
@@ -325,27 +333,27 @@ g_script_js_evaluate (GScriptJs *g_script_js)
 static void
 g_script_js_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
-  GScriptJs *js = G_SCRIPT_JS (object);
+  GScriptJs *script = G_SCRIPT_JS (object);
 
   switch (prop_id)
   {
-    case PROP_SCRIPT:
+    case PROP_FILENAME:
     {
-      const gchar *script = g_value_get_string (value);
+      const gchar *filename = g_value_get_string (value);
 
-      if (script)
+      if (filename)
       {
-        g_script_js_set_script (js, script);
+        g_script_js_set_filename (script, filename);
       }
       break;
     }
-    case PROP_SOURCE:
+    case PROP_JAVASCRIPT:
     {
-      const gchar *source = g_value_get_string (value);
+      const gchar *javascript = g_value_get_string (value);
   
-      if (source)
+      if (javascript)
       {
-        g_script_js_set_source (js, source);
+        g_script_js_set_javascript (script, javascript);
       }
       break;
     }
@@ -366,16 +374,16 @@ g_script_js_set_property (GObject *object, guint prop_id, const GValue *value, G
 static void
 g_script_js_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec *pspec)
 {
-  GScriptJs *js = G_SCRIPT_JS (object);
-  GScriptJsPrivate *priv = js->priv;
+  GScriptJs *script = G_SCRIPT_JS (object);
+  GScriptJsPrivate *priv = script->priv;
 
   switch (prop_id)
   {
-    case PROP_SCRIPT:
-      g_value_set_string (value, priv->script);
+    case PROP_FILENAME:
+      g_value_set_string (value, priv->filename);
       break;
-    case PROP_SOURCE:
-      g_value_set_string (value, priv->source);
+    case PROP_JAVASCRIPT:
+      g_value_set_string (value, priv->javascript);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -408,23 +416,22 @@ g_script_js_class_init (GScriptJsClass *klass)
   object_class->get_property = g_script_js_get_property;
   g_type_class_add_private(object_class, sizeof (GScriptJsPrivate));
 
-  gParamSpecs[PROP_SCRIPT] = g_param_spec_string ("script",
-                                                  _("Script"),
-                                                  _("Add script to evaluate."),
-                                                  NULL,
-                                                  G_PARAM_WRITABLE);
+  gParamSpecs[PROP_FILENAME] = g_param_spec_string ("filename",
+                                                    _("Filename"),
+                                                    _("Add script filename to evaluate."),
+                                                    NULL,
+                                                    G_PARAM_WRITABLE);
 
-  gParamSpecs[PROP_SOURCE] = g_param_spec_string ("source",
-                                                  _("Source"),
-                                                  _("Add source filename to evaluate."),
-                                                  NULL,
-                                                  G_PARAM_WRITABLE);
+  gParamSpecs[PROP_JAVASCRIPT] = g_param_spec_string ("javascript",
+                                                      _("Javascript"),
+                                                      _("Add source code to evaluate."),
+                                                      NULL,
+                                                      G_PARAM_WRITABLE);
 
-        // functions RO
+  // functions RO
+  g_object_class_install_property(object_class, PROP_FILENAME, gParamSpecs[PROP_FILENAME]);
 
-  g_object_class_install_property(object_class, PROP_SCRIPT, gParamSpecs[PROP_SCRIPT]);
-
-  g_object_class_install_property(object_class, PROP_SOURCE, gParamSpecs[PROP_SOURCE]);
+  g_object_class_install_property(object_class, PROP_JAVASCRIPT, gParamSpecs[PROP_JAVASCRIPT]);
 }
 
 /**
@@ -437,15 +444,15 @@ g_script_js_class_init (GScriptJsClass *klass)
  * Side effects: None.
  */
 static void
-g_script_js_init (GScriptJs *js)
+g_script_js_init (GScriptJs *script)
 {
-  js->priv = G_TYPE_INSTANCE_GET_PRIVATE(js, G_TYPE_SCRIPT_JS, GScriptJsPrivate);
+  script->priv = G_TYPE_INSTANCE_GET_PRIVATE(script, G_TYPE_SCRIPT_JS, GScriptJsPrivate);
 
-  js->priv->context = gjs_context_new ();
+  script->priv->context = gjs_context_new ();
 
-  js->priv->functions = NULL;
-  js->priv->script = NULL;
-  js->priv->source = NULL;
+  script->priv->functions = NULL;
+  script->priv->filename = NULL;
+  script->priv->javascript = NULL;
 }
 
 static void
@@ -457,7 +464,7 @@ gtk_buildable_init (GtkBuildableIface *iface)
  * TODO
  */
 void
-g_script_js_set_object (GScriptJs *js, const gchar *name, GObject *object)
+g_script_js_set_object (GScriptJs *script, const gchar *name, GObject *object)
 {
 }
 
@@ -494,7 +501,7 @@ parse_functions_list (char *string, GSList **list)
 }
 
 static gboolean
-g_script_js_introspect_functions (GScriptJs *g_script_js)
+g_script_js_introspect_functions (GScriptJs *script)
 {
   JSContext *context;
   JSObject *global;
@@ -511,17 +518,19 @@ g_script_js_introspect_functions (GScriptJs *g_script_js)
   const gchar *path = MODULES;
 
   /* javascript reflection code to parse script */
-  const gchar *script = "imports.searchPath.unshift(p);var m=imports.parser;function i(n){return "
-                        "n.id.name+':'+n.loc.start.line+':'+n.loc.start.column+':'+n.loc.end.line"
-                        "+':'+n.loc.end.column}var r=m.parse(c,{loc:true});var s='';for(var eleme"
-                        "nt in r.body){var n=r.body[element];if(n.type=='VariableDeclaration')for"
-                        "(element in n.declarations){var d=n.declarations[element];if(d.init.type"
-                        "=='FunctionExpression')s+=i(d)+'|'}else if(n.type=='FunctionDeclaration'"
-                        ")s+=i(n)+'|'}";
+  const gchar *javascript = "imports.searchPath.unshift(p);var m=imports.parser;function i(n){return "
+                            "n.id.name+':'+n.loc.start.line+':'+n.loc.start.column+':'+n.loc.end.line"
+                            "+':'+n.loc.end.column}var r=m.parse(c,{loc:true});var s='';for(var eleme"
+                            "nt in r.body){var n=r.body[element];if(n.type=='VariableDeclaration')for"
+                            "(element in n.declarations){var d=n.declarations[element];if(d.init.type"
+                            "=='FunctionExpression')s+=i(d)+'|'}else if(n.type=='FunctionDeclaration'"
+                            ")s+=i(n)+'|'}";
 
-  priv = g_script_js->priv;
+  priv = script->priv;
 
-  g_script_js_functions_free (g_script_js);
+  g_return_val_if_fail (priv->javascript != NULL, FALSE);
+
+  g_script_js_functions_free (script);
 
   context = (JSContext *) gjs_context_get_native_context (priv->context);
 
@@ -541,8 +550,8 @@ g_script_js_introspect_functions (GScriptJs *g_script_js)
   g_assert_cmpint (ok, ==, JS_TRUE);
 
   /* set code to parse */
-  length = g_utf8_strlen (priv->script, G_MAXLONG);
-  success = gjs_string_from_utf8 (context, priv->script, (gssize) length, &value);
+  length = g_utf8_strlen (priv->javascript, G_MAXLONG);
+  success = gjs_string_from_utf8 (context, priv->javascript, (gssize) length, &value);
 
   g_assert_cmpint (success, ==, TRUE);
 
@@ -553,14 +562,14 @@ g_script_js_introspect_functions (GScriptJs *g_script_js)
 
   /* run code (parse script) */
   error = NULL;
-  length = g_utf8_strlen (script, G_MAXLONG);
-  success = gjs_context_eval (priv->context, script, length, "__gtkbuilder_internal__", NULL, &error);
+  length = g_utf8_strlen (javascript, G_MAXLONG);
+  success = gjs_context_eval (priv->context, javascript, length, "__gtkbuilder_internal__", NULL, &error);
 
   if (!success)
   {
     if (error)
     {
-      g_critical ("%s", error->message);
+      g_debug ("%s", error->message);
 
       g_error_free (error);
     }

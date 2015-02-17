@@ -8,12 +8,12 @@ main (int argc, char *argv[])
 
   script = g_script_js_new ();
 
-  g_script_js_set_source (script, "script.js");
-  g_message ("%s", g_script_js_get_script (script));
-  g_script_js_set_script (script, "var Gtk = imports.gi.Gtk;");
-  g_message ("%s", g_script_js_get_script (script));
-  g_script_js_set_script (script, "function hello() { print('hello') }");
-  g_message ("%s", g_script_js_get_script (script));
+  g_script_js_set_filename (script, "test-1.js");
+  g_message ("%s", g_script_js_get_filename (script));
+  g_script_js_set_javascript (script, "var Gtk = imports.gi.Gtk;");
+  g_message ("%s", g_script_js_get_javascript (script));
+  g_script_js_set_javascript (script, "function hello() { print('hello') }");
+  g_message ("%s", g_script_js_get_javascript (script));
 
   return 0;
 }

@@ -25,12 +25,19 @@
 
 enum
 {
+  EDITED_SIGNAL_HANDLER,
+  LAST_SIGNAL
+};
+
+enum
+{
   PROP_0,
-  PROP_SCRIPT,
+  PROP_JAVASCRIPT,
   PROP_LAST
 };
 
-static GParamSpec *gParamSpecs[PROP_LAST];
+static GParamSpec *properties[PROP_LAST];
+static guint signals[LAST_SIGNAL] = { 0 };
 
 static void g_script_js_editor_finalize (GObject *);
 
@@ -51,6 +58,7 @@ static gboolean _rewind = TRUE;
 typedef struct _Data
 {
   GScriptJsEditorPrivate *priv;
+  GScriptJsEditor *self;
   GtkWidget *combo;
   GtkWidget *editor;
 } Data;
@@ -73,13 +81,26 @@ g_script_js_editor_class_init (GScriptJsEditorClass *klass)
   //object_class->get_property = g_script_js_editor_get_property;
   g_type_class_add_private (object_class, sizeof (GScriptJsEditorPrivate));
 
-  gParamSpecs[PROP_SCRIPT] = g_param_spec_object ("script",
-                                                  _("Script"),
-                                                  _("Add script to edit."),
-                                                  G_TYPE_SCRIPT_JS,
-                                                  G_PARAM_WRITABLE);
+  /* TODO */
+  properties[PROP_JAVASCRIPT] = g_param_spec_string ("javascript",
+                                                     _("Javascript"),
+                                                     _("Add javascript source code to edit."),
+                                                     NULL,
+                                                     G_PARAM_WRITABLE);
 
-  g_object_class_install_property (object_class, PROP_SCRIPT, gParamSpecs[PROP_SCRIPT]);
+  /* TODO */
+  g_object_class_install_property (object_class, PROP_JAVASCRIPT, properties[PROP_JAVASCRIPT]);
+
+  signals[EDITED_SIGNAL_HANDLER] = g_signal_new ("edited",
+                                                 G_TYPE_FROM_CLASS (object_class),
+                                                 G_SIGNAL_RUN_LAST,
+                                                 G_STRUCT_OFFSET (GScriptJsEditorClass, edited),
+                                                 NULL,
+                                                 NULL,
+                                                 g_cclosure_marshal_VOID__STRING,
+                                                 G_TYPE_NONE,
+                                                 1,
+                                                 G_TYPE_STRING);
 }
 
 
@@ -114,7 +135,7 @@ g_script_js_editor_init (GScriptJsEditor *editor)
   manager = gtk_source_language_manager_get_default ();
   language = gtk_source_language_manager_get_language (manager, "js");
 
-  editor->priv->script = NULL; // g_script_js_new ();
+  editor->priv->script = g_script_js_new ();
   editor->priv->store =  gtk_list_store_new (5, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT);
   editor->priv->buffer =  gtk_source_buffer_new_with_language (language);
 }
@@ -135,6 +156,7 @@ g_script_js_editor_new (void)
 
   data = (Data *) g_malloc (sizeof (Data));
   editor = (GScriptJsEditor *) g_object_new (G_TYPE_SCRIPT_JS_EDITOR, NULL);
+  data->self = editor;
   data->priv = editor->priv;
 
   box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 3);
@@ -188,41 +210,51 @@ g_script_js_editor_new (void)
  * TODO
  */
 gboolean
-g_script_js_editor_set_script (GScriptJsEditor *editor, GScriptJs *script)
+g_script_js_editor_set_javascript (GScriptJsEditor *editor, const gchar *javascript)
 {
   GScriptJsEditorPrivate *priv;
   GtkTextIter cursor;
-  gchar *source;
 
   g_return_val_if_fail (G_IS_SCRIPT_JS_EDITOR (editor), FALSE);
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), FALSE);
 
   priv = editor->priv;
-  priv->script = script;
-  source = g_script_js_get_script (script);
 
   fill_store (priv);
   //g_object_unref (priv->store);
-  gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv->buffer), source, -1);
+  gtk_text_buffer_set_text (GTK_TEXT_BUFFER (priv->buffer), javascript, -1);
 
   gtk_text_buffer_get_start_iter (GTK_TEXT_BUFFER (priv->buffer), &cursor);
   gtk_text_buffer_place_cursor (GTK_TEXT_BUFFER (priv->buffer), &cursor);
 
   //gtk_text_view_place_cursor_onscreen (GTK_TEXT_VIEW (view));
 
+  g_script_js_set_javascript (priv->script, javascript);
+
   return TRUE;
+}
+
+/*
+ * TODO
+ */
+const gchar *
+g_script_js_editor_get_javascript (GScriptJsEditor *editor)
+{
+  g_return_val_if_fail (G_IS_SCRIPT_JS_EDITOR (editor), FALSE);
+
+  return g_script_js_get_javascript (editor->priv->script);
 }
 
 static void
 modified (GtkTextBuffer *buffer, gpointer data)
 {
+  GScriptJsEditor *self;
   GtkWidget *combo;
   GtkWidget *editor;
   GtkTextIter start;
   GtkTextIter end;
   GScriptJsEditorPrivate *priv;
   gboolean modified;
-  gchar *source;
+  gchar *javascript;
 
   modified = gtk_text_buffer_get_modified (buffer);
 
@@ -232,14 +264,15 @@ modified (GtkTextBuffer *buffer, gpointer data)
   }
 
   priv = DATA (data)->priv;
+  self = DATA (data)->self;
   combo = DATA (data)->combo;
   editor = DATA (data)->editor;
 
   gtk_text_buffer_get_bounds (buffer, &start, &end);
 
-  source = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
+  javascript = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 
-  g_script_js_set_script (priv->script, source);
+  g_script_js_set_javascript (priv->script, javascript);
 
   fill_store (priv);
 
@@ -247,7 +280,9 @@ modified (GtkTextBuffer *buffer, gpointer data)
   //gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
   move (GTK_TEXT_VIEW (editor), GTK_MOVEMENT_DISPLAY_LINES, 0, FALSE, combo);
 
-  g_free (source);
+  g_signal_emit (self, signals[EDITED_SIGNAL_HANDLER], 0, javascript);
+
+  g_free (javascript);
 
   gtk_text_buffer_set_modified (buffer, FALSE);
 }
@@ -417,13 +452,13 @@ g_script_js_editor_set_property (GObject *object, guint prop_id, const GValue *v
 
   switch (prop_id)
   {
-    case PROP_SCRIPT:
+    case PROP_JAVASCRIPT:
     {
-      GScriptJs *script = G_SCRIPT_JS (g_value_get_object (value));
+      const gchar *javascript = g_value_get_string (value);
   
-      if (script)
+      if (javascript)
       {
-        priv->script = script;
+        g_script_js_set_javascript (priv->script, javascript);
       }
       break;
     }

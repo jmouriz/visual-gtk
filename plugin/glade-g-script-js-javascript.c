@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#include <string.h>
+
 #include <gladeui/glade.h>
 #include <g-script-js-editor.h>
 
@@ -66,7 +68,7 @@ glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property
 
   g_print ("%s (%d) : %s (%s)\n", __FILE__, __LINE__, __FUNCTION__, string);
 
-  if (string)
+  if (string && strlen (string) > 0)
   {
     g_script_js_editor_set_javascript (G_SCRIPT_JS_EDITOR (javascript->editor), string);
   }

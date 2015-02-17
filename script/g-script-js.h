@@ -48,34 +48,34 @@ struct _GScriptJsClass
   GObjectClass parent_class;
 };
 
-GType         g_script_js_get_type      (void) G_GNUC_CONST;
+GType         g_script_js_get_type       (void) G_GNUC_CONST;
 
-GScriptJs    *g_script_js_new           (void);
+GScriptJs    *g_script_js_new            (void);
 
-void          g_script_js_free          (GScriptJs *js);
+void          g_script_js_free           (GScriptJs *script);
 
-GClosure     *g_script_js_get_closure   (GScriptJs   *js,
-                                         const gchar *function);
+GClosure     *g_script_js_get_closure    (GScriptJs   *script,
+                                          const gchar *function);
 
-gboolean      g_script_js_set_script    (GScriptJs   *js,
-                                         const gchar *script);
+gboolean      g_script_js_set_filename   (GScriptJs   *script,
+                                          const gchar *filename);
 
-gboolean      g_script_js_set_source    (GScriptJs   *js,
-                                         const gchar *source);
+gboolean      g_script_js_set_javascript (GScriptJs   *script,
+                                          const gchar *javascript);
 
-gchar        *g_script_js_get_script    (GScriptJs   *js);
+gchar        *g_script_js_get_filename   (GScriptJs   *script);
 
-gchar        *g_script_js_get_source    (GScriptJs   *js);
+gchar        *g_script_js_get_javascript (GScriptJs   *script);
 
-GSList       *g_script_js_get_functions (GScriptJs   *js);
+GSList       *g_script_js_get_functions  (GScriptJs   *script);
 
-void          g_script_js_set_object    (GScriptJs   *js,
-                                         const gchar *name,
-                                         GObject     *object);
+void          g_script_js_set_object     (GScriptJs   *script,
+                                          const gchar *name,
+                                          GObject     *object);
 
-gboolean      g_script_js_save          (GScriptJs   *js);
+gboolean      g_script_js_save           (GScriptJs   *script);
 
-gboolean      g_script_js_evaluate      (GScriptJs   *js);
+gboolean      g_script_js_evaluate       (GScriptJs   *script);
 
 G_END_DECLS
 

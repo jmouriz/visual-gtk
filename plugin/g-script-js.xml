@@ -3,17 +3,18 @@
   <glade-widget-classes>
     <glade-widget-class toplevel="True" name="GScriptJs" generic-name="script" title="Script">
       <create-editor-property-function>glade_g_script_js_create_eprop</create-editor-property-function>
-      <set-property-function>glade_g_script_js_set_property</set-property-function>
-      <!--
-      <post-create-function>glade_g_script_js_post_create</post-create-function>
-      <create-editable-function>glade_g_script_js_create_editable</create-editable-function>
       <read-widget-function>glade_g_script_js_read_widget</read-widget-function>
       <write-widget-function>glade_g_script_js_write_widget</write-widget-function>
-      <string-from-value-function>glade_g_script_js_string_from_value</string-from-value-function>
+      <!--
+      <create-widget-function>glade_g_script_js_create_widget</create-widget-function>
+      <create-editable-function>glade_g_script_js_create_editable</create-editable-function>
       -->
+      <post-create-function>glade_g_script_js_post_create</post-create-function>
+      <set-property-function>glade_g_script_js_set_property</set-property-function>
+      <!-- string-from-value-function>glade_g_script_js_string_from_value</string-from-value-function -->
       <properties>
-      	<property id="script" custom-layout="False"/>
-      	<property id="source" custom-layout="False" multiline="True"/>
+      	<property id="filename" custom-layout="False"/>
+      	<property id="javascript" custom-layout="False" multiline="True"/>
       </properties>
     </glade-widget-class>
   </glade-widget-classes>

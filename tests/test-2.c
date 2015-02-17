@@ -16,8 +16,6 @@ connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar 
 
   script = G_SCRIPT_JS (gtk_builder_get_object (builder, name));
 
-  script = G_SCRIPT_JS (gtk_builder_get_object (builder, name));
-
   g_script_js_set_object (script, "builer", G_OBJECT (builder));
 
   if (!script)
@@ -61,7 +59,7 @@ main (int argc, gchar *argv[])
 
   builder = gtk_builder_new();
   error = NULL;
-  gtk_builder_add_from_file (builder, "script.ui", &error);
+  gtk_builder_add_from_file (builder, "test-2.ui", &error);
   gtk_builder_connect_signals_full (builder, connect, (gpointer) "script");
   g_assert_no_error (error);
 

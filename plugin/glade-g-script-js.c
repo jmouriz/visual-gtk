@@ -19,21 +19,13 @@
 
 #include <gladeui/glade.h>
 
-//#include "glade-g-script-js-editor.h"
-#include "glade-g-script-js-script.h"
-#include "glade-g-script-js-source.h"
+#include "glade-g-script-js.h"
+#include "glade-g-script-js-filename.h"
+#include "glade-g-script-js-javascript.h"
 
-//#include <gladeui/glade-editor-property.h>
-//#include <gladeui/glade-base-editor.h>
-//#include <gladeui/glade-xml-utils.h>
-
-#include <g-script-js.h>
 #include <gtk/gtk.h>
 #include <string.h>
 #include <stdlib.h>
-
-static void glade_g_script_js_set_script (GObject *, const GValue *);
-static void glade_g_script_js_set_source (GObject *, const GValue *);
 
 /* -------------------------------- ParamSpecs ------------------------------ */
 /* This function does absolutely nothing
@@ -55,8 +47,8 @@ glade_gtk_stop_emission_POINTER (gpointer instance, gpointer dummy, gpointer dat
 void
 glade_g_script_js_init (const gchar *name)
 {
-  g_print("Registering type: %s\n", g_type_name(G_TYPE_SCRIPT_JS));
-  g_print("Initializing %s\n", name);
+  //g_print("Registering type: %s\n", g_type_name(G_TYPE_SCRIPT_JS));
+  //g_print("Initializing %s\n", name);
   //gtk_init(NULL, NULL);
   //g_debug("Registering type: %s", g_type_name(G_TYPE_SCRIPT_JS));
 }
@@ -82,18 +74,20 @@ glade_g_script_js_post_create (GladeWidgetAdaptor *adaptor, GObject *object, Gla
 void
 glade_g_script_js_set_property (GladeWidgetAdaptor *adaptor, GObject *object, const gchar *id, const GValue *value)
 {
-  if (!strcmp (id, "script"))
+  if (!strcmp (id, "filename"))
   {
-    glade_g_script_js_set_script (object, value);
+    glade_g_script_js_set_filename (object, value);
   }
-  else if (!strcmp (id, "source"))
+  else if (!strcmp (id, "javascript"))
   {
-    glade_g_script_js_set_source (object, value);
+    glade_g_script_js_set_javascript (object, value);
   }
+  /*
   else
   {
     GWA_GET_CLASS (GTK_TYPE_WIDGET)->set_property (adaptor, object, id, value);
   }
+  */
 }
 
 void
@@ -106,16 +100,16 @@ glade_g_script_js_read_widget (GladeWidgetAdaptor *adaptor, GladeWidget *widget,
     return;
   }
 
-  /* First chain up and read in all the normal properties.. */
-  GWA_GET_CLASS (GTK_TYPE_WIDGET)->read_widget (adaptor, widget, node);
+  /* First chain up and read in all the normal properties... */
+  GWA_GET_CLASS (GTK_TYPE_WIDGET)->read_widget (adaptor, widget, node); /* (?) */
 
-  /* sync script property after a load... */
-  prop = glade_widget_get_property (widget, "script");
-  glade_g_script_js_set_script (glade_widget_get_object (widget), glade_property_inline_value (prop));
+  /* sync filename property after a load... */
+  prop = glade_widget_get_property (widget, "filename");
+  glade_g_script_js_set_filename (glade_widget_get_object (widget), glade_property_inline_value (prop));
 
-  /* sync source property after a load... */
-  prop = glade_widget_get_property (widget, "source");
-  glade_g_script_js_set_source (glade_widget_get_object (widget), glade_property_inline_value (prop));
+  /* sync javascript property after a load... */
+  prop = glade_widget_get_property (widget, "javascript");
+  glade_g_script_js_set_javascript (glade_widget_get_object (widget), glade_property_inline_value (prop));
 }
 
 void
@@ -149,18 +143,22 @@ glade_g_script_js_create_eprop (GladeWidgetAdaptor *adaptor, GladePropertyClass 
   g_print ("%s (%d) : %s (%s)\n", __FILE__, __LINE__, __FUNCTION__, glade_property_class_id (klass));
 
   /* chain up.. */
-  if (strncmp (glade_property_class_id (klass), "script", strlen ("script")) == 0)
+  if (strncmp (glade_property_class_id (klass), "filename", strlen ("filename")) == 0)
   {
-    eprop = g_object_new (GLADE_TYPE_EPROP_SCRIPT, "property-class", klass, "use-command", use_command, NULL);
+    eprop = g_object_new (GLADE_TYPE_EPROP_FILENAME, "property-class", klass, "use-command", use_command, NULL);
   }
-  else if (strncmp (glade_property_class_id (klass), "source", strlen ("source")) == 0)
+  else if (strncmp (glade_property_class_id (klass), "javascript", strlen ("javascript")) == 0)
   {
-    eprop = g_object_new (GLADE_TYPE_EPROP_SOURCE, "property-class", klass, "use-command", use_command, NULL);
+    eprop = g_object_new (GLADE_TYPE_EPROP_JAVASCRIPT, "property-class", klass, "use-command", use_command, NULL);
   }
+  /*
   else
   {
     eprop = GWA_GET_CLASS (GTK_TYPE_WIDGET)->create_eprop (adaptor, klass, use_command);
   }
+  */
+
+  g_object_set_data (G_OBJECT (eprop), "adaptor", adaptor);
 
   return eprop;
 }
@@ -180,34 +178,29 @@ glade_g_script_js_create_editable (GladeWidgetAdaptor *adaptor, GladeEditorPageT
 
   return editable;
 }
+
+GladeWidget *
+glade_g_script_js_create_widget (GladeWidgetAdaptor *adaptor, gchar *property, va_list properties)
+{
+  g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
+
+  return GLADE_WIDGET (g_object_new_valist (GLADE_TYPE_WIDGET, property, properties));
+}
 */
 
-static void
-glade_g_script_js_set_script (GObject *object, const GValue *value)
+void
+glade_g_script_js_post_create (GladeWidgetAdaptor *adaptor, GObject *object, GladeCreateReason reason)
 {
-  GladeWidget *widget;
+  g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
 
-  widget = glade_widget_get_from_gobject (object);
-
-  if (g_value_get_string (value) == NULL)
+  if (reason == GLADE_CREATE_USER)
   {
-    return;
+    g_print ("object : %p\n", object);
+    g_print ("G_SCRIPT_JS (object) : %p\n", G_SCRIPT_JS (object));
+    //*script = G_SCRIPT_JS (object);
+    script = (GScriptJs *) object;
+    g_print ("script : %p\n", script);
+
+    g_object_set_data (G_OBJECT (adaptor), "script", (gpointer) object);
   }
-
-  g_script_js_set_script (G_SCRIPT_JS (object), g_value_get_string (value));
-}
-
-static void
-glade_g_script_js_set_source (GObject *object, const GValue *value)
-{
-  GladeWidget *widget;
-
-  widget = glade_widget_get_from_gobject (object);
-
-  if (g_value_get_string (value) == NULL)
-  {
-    return;
-  }
-
-  g_script_js_set_source (G_SCRIPT_JS (object), g_value_get_string (value));
 }

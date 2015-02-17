@@ -47,16 +47,20 @@ struct _GScriptJsEditor
 struct _GScriptJsEditorClass
 {
   GtkFrameClass parent_class;
+
+  void (*edited) (GScriptJsEditor *, const gchar *);
 };
 
-GType            g_script_js_editor_get_type      (void) G_GNUC_CONST;
+GType            g_script_js_editor_get_type       (void) G_GNUC_CONST;
 
-GtkWidget       *g_script_js_editor_new           (void);
+GtkWidget       *g_script_js_editor_new            (void);
 
-void             g_script_js_editor_free          (GScriptJsEditor *js);
+void             g_script_js_editor_free           (GScriptJsEditor *js);
 
-gboolean         g_script_js_editor_set_script    (GScriptJsEditor *editor,
-                                                   GScriptJs       *script);
+gboolean         g_script_js_editor_set_javascript (GScriptJsEditor *editor,
+                                                    const gchar *javascript);
+
+const gchar     *g_script_js_editor_get_javascript (GScriptJsEditor *editor);
 
 G_END_DECLS
 
