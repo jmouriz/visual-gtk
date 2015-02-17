@@ -191,16 +191,8 @@ glade_g_script_js_create_widget (GladeWidgetAdaptor *adaptor, gchar *property, v
 void
 glade_g_script_js_post_create (GladeWidgetAdaptor *adaptor, GObject *object, GladeCreateReason reason)
 {
-  g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
-
   if (reason == GLADE_CREATE_USER)
   {
-    g_print ("object : %p\n", object);
-    g_print ("G_SCRIPT_JS (object) : %p\n", G_SCRIPT_JS (object));
-    //*script = G_SCRIPT_JS (object);
-    script = (GScriptJs *) object;
-    g_print ("script : %p\n", script);
-
-    g_object_set_data (G_OBJECT (adaptor), "script", (gpointer) object);
+    g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
   }
 }

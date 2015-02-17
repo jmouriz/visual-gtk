@@ -1,6 +1,12 @@
-----------------------------------------------------------------------------
-                     GtkBuilder + Inline JavaScript
-----------------------------------------------------------------------------
+-----------
+Visual GTK+
+-----------
+
+A Glade plugin to include a hack of Christian Hergert GtkBuilderScript and enable edit JavaScript.
+
+From the original README:
+
+GtkBuilder + Inline JavaScript
 
 This is a quick hack to allow writing javascript inside of a GtkBuilder xml
 file and attaching signals to said javascript functions.
@@ -14,3 +20,35 @@ Cheers, and Happy Hacking,
 
 --
 Christian Hergert <chris@dronelabs.com>
+
+Get source
+----------
+
+git clone https://github.com/jmouriz/visual-gtk
+
+Install dependencies
+--------------------
+
+In Ubuntu 14.10, install (at least) these packages:
+
+libcjs-dev
+libgladeui-dev
+libgtksourceview-3.0-dev
+
+$ apt-get install libcjs-dev libgladeui-dev libgtksourceview-3.0-dev
+
+Build all
+---------
+
+cd visual-gtk
+./build.sh
+
+Set the environment
+-------------------
+
+. set-glade-environment.sh
+
+And enjoy (test) with glade, tests and examples.
+
+--
+Juan Manuel Mouriz <jmouriz@gmail.com>

@@ -64,8 +64,7 @@ glade_eprop_filename_load (GladeEditorProperty *eprop, GladeProperty *property)
     g_free (value);
   }
 
-  //g_print ("%s (%d) : %s (%s) | %s\n", __FILE__, __LINE__, __FUNCTION__, string, G_OBJECT_TYPE_NAME (script));
-  g_print ("%p\n", script);
+  g_print ("%s (%d) : %s (%s)", __FILE__, __LINE__, __FUNCTION__, string);
 
   if (string)
   {
