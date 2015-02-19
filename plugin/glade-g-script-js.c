@@ -36,14 +36,17 @@ empty (GObject * container, GladeCreateReason reason)
 {
 }
 
-/* This function is used to stop default handlers  */
+/* This function is used to stop default handlers  */ // (-?-)
 static void
 glade_gtk_stop_emission_POINTER (gpointer instance, gpointer dummy, gpointer data)
 {
   g_signal_stop_emission (instance, GPOINTER_TO_UINT (data), 0);
 }
 
+/* ----------------------------- GScriptJs ------------------------------ */
+
 /* Initialize needed pspec types from here */
+/*
 void
 glade_g_script_js_init (const gchar *name)
 {
@@ -52,8 +55,8 @@ glade_g_script_js_init (const gchar *name)
   //gtk_init(NULL, NULL);
   //g_debug("Registering type: %s", g_type_name(G_TYPE_SCRIPT_JS));
 }
+*/
 
-/* ----------------------------- GScriptJs ------------------------------ */
 /*
 void
 glade_g_script_js_post_create (GladeWidgetAdaptor *adaptor, GObject *object, GladeCreateReason reason)
@@ -82,12 +85,10 @@ glade_g_script_js_set_property (GladeWidgetAdaptor *adaptor, GObject *object, co
   {
     glade_g_script_js_set_javascript (object, value);
   }
-  /*
   else
   {
     GWA_GET_CLASS (GTK_TYPE_WIDGET)->set_property (adaptor, object, id, value);
   }
-  */
 }
 
 void

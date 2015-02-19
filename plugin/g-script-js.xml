@@ -1,5 +1,11 @@
-<glade-catalog name="g-script-js" library="glade-g-script-js" icon-prefix="js">
-  <init-function>glade_g_script_js_init</init-function>
+<glade-catalog
+  name="g-script-js"
+  version="1.0"
+  icon-prefix="js"
+  library="glade-g-script-js"
+  domain="g"
+  book="g-script-js">
+  <!-- init-function>glade_g_script_js_init</init-function -->
   <glade-widget-classes>
     <glade-widget-class toplevel="True" name="GScriptJs" generic-name="script" title="Script">
       <create-editor-property-function>glade_g_script_js_create_eprop</create-editor-property-function>
@@ -13,12 +19,12 @@
       <set-property-function>glade_g_script_js_set_property</set-property-function>
       <!-- string-from-value-function>glade_g_script_js_string_from_value</string-from-value-function -->
       <properties>
-      	<property id="filename" custom-layout="False"/>
-      	<property id="javascript" custom-layout="False" multiline="True"/>
+      	<property id="filename" custom-layout="False" title="Source filename"/>
+      	<property id="javascript" custom-layout="False" multiline="True" title="JavaScript code"/>
       </properties>
     </glade-widget-class>
   </glade-widget-classes>
-  <glade-widget-group name="g-script-js" title="Script">
+  <glade-widget-group name="g-script-js" title="JavaScript Code">
     <glade-widget-class-ref name="GScriptJs"/>
   </glade-widget-group>
 </glade-catalog>

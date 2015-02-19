@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
 <interface>
-  <!-- interface-requires gtk+ 3.0 -->
+  <requires lib="g-script-js" version="1.0"/>
+  <requires lib="gtk+" version="3.12"/>
   <object class="GScriptJs" id="script">
-    <property name="javascript">
-<![CDATA[
-var Gtk = imports.gi.Gtk;
+    <property name="javascript"><![CDATA[var Gtk = imports.gi.Gtk;
 
 function alert(message)
 {
@@ -47,9 +47,7 @@ function onClicked(widget, data)
 function onQuit()
 {
   Gtk.main_quit();
-}
-]]>
-    </property>
+}]]></property>
   </object>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>
@@ -57,17 +55,17 @@ function onQuit()
     <property name="default_height">480</property>
     <signal name="delete-event" handler="onQuit" swapped="no"/>
     <child>
-      <object class="GtkBox" id="box1">
+      <object class="GtkBox" id="box">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkButton" id="button1">
+          <object class="GtkButton" id="button">
             <property name="label" translatable="yes">Click Me!</property>
+            <property name="use_action_appearance">False</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <property name="use_action_appearance">False</property>
             <signal name="clicked" handler="onClicked" swapped="no"/>
           </object>
           <packing>
@@ -77,12 +75,12 @@ function onQuit()
           </packing>
         </child>
         <child>
-          <object class="GtkScrolledWindow" id="scrolledwindow1">
+          <object class="GtkScrolledWindow" id="scrolledwindow">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="shadow_type">in</property>
             <child>
-              <object class="GtkTextView" id="textview1">
+              <object class="GtkTextView" id="textview">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
