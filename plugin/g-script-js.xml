@@ -5,19 +5,12 @@
   library="glade-g-script-js"
   domain="g"
   book="g-script-js">
-  <!-- init-function>glade_g_script_js_init</init-function -->
   <glade-widget-classes>
     <glade-widget-class toplevel="True" name="GScriptJs" generic-name="script" title="Script">
       <create-editor-property-function>glade_g_script_js_create_eprop</create-editor-property-function>
-      <read-widget-function>glade_g_script_js_read_widget</read-widget-function>
-      <write-widget-function>glade_g_script_js_write_widget</write-widget-function>
-      <!--
-      <create-widget-function>glade_g_script_js_create_widget</create-widget-function>
-      <create-editable-function>glade_g_script_js_create_editable</create-editable-function>
-      -->
-      <post-create-function>glade_g_script_js_post_create</post-create-function>
+      <!-- read-widget-function>glade_g_script_js_read_widget</read-widget-function -->
+      <!-- write-widget-function>glade_g_script_js_write_widget</write-widget-function -->
       <set-property-function>glade_g_script_js_set_property</set-property-function>
-      <!-- string-from-value-function>glade_g_script_js_string_from_value</string-from-value-function -->
       <properties>
       	<property id="filename" custom-layout="False" title="Source filename"/>
       	<property id="javascript" custom-layout="False" multiline="True" title="JavaScript code"/>

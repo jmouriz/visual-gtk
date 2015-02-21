@@ -1,44 +1,44 @@
 var Gtk = imports.gi.Gtk;
 
-function alert(message)
-{
-  let d = new Gtk.MessageDialog();
-  d.add_button("Close", 0);
-  d.set_markup(message);
-  d.run();
-  d.destroy();
-}
-
-var get_version = function()
+var version = function()
 {
   return Gtk.MAJOR_VERSION + '.' + Gtk.MINOR_VERSION + '.' + Gtk.MICRO_VERSION
 }
 
+function alert(message)
+{
+  let dialog = new Gtk.MessageDialog();
+  dialog.add_button("Close", 0);
+  dialog.set_markup(message);
+  dialog.run();
+  dialog.destroy();
+}
+
 function onClicked(widget, data)
 {
-  let w = new Gtk.Window();
-  let c = new Gtk.Box();
-  let l = new Gtk.Label();
-  let b = new Gtk.Button();
+  let dialog = new Gtk.Dialog();
+  let box = dialog.get_content_area();
+  let label = new Gtk.Label();
+  let button = new Gtk.Button();
 
-  b.set_label("View GTK+ version");
-  b.connect("clicked", function()
+  button.set_label("View GTK+ version");
+  button.connect("clicked", function()
   {
-    alert("GTK+ " + get_version())
+    alert("GTK+ " + version())
   });
 
-  l.set_text("You clicked on '" + widget.get_label() + "'");
+  label.set_text("You clicked on '" + widget.get_label() + "'");
 
-  c.set_orientation(Gtk.Orientation.VERTICAL);
-  c.add(l);
-  c.add(b);
+  box.add(label);
+  box.add(button);
 
-  w.set_default_size(320, 120);
-  w.add(c);
-  w.show_all();
+  box.show_all();
+
+  dialog.run();
+  dialog.destroy();
 }
 
 function onQuit()
 {
-  Gtk.main_quit();
+  Gtk.main_quit()
 }

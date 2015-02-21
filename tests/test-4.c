@@ -1,5 +1,7 @@
+#include <girepository.h>
 #include <gtk/gtk.h>
 #include <cjs/gjs-module.h>
+#include <gi/object.h>
 
 #include <g-script-js.h>
 
@@ -7,6 +9,7 @@ static void
 connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar *handler, GObject *connect_object, GConnectFlags flags, gpointer data)
 {
   const gchar *name = (gchar *) data;
+  GIRepository *repository;
   gboolean success;
   GScriptJs *script;
   GClosure *closure;
@@ -22,6 +25,12 @@ connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar 
 
     return;
   }
+
+  repository = g_irepository_get_default ();
+
+  g_irepository_require (repository, "Gtk", NULL, G_IREPOSITORY_LOAD_FLAG_LAZY, NULL);
+
+  g_script_js_set_object (script, "document", G_OBJECT (builder));
 
   success = g_script_js_evaluate (script);
 
@@ -57,7 +66,8 @@ main (int argc, gchar *argv[])
 
   builder = gtk_builder_new();
   error = NULL;
-  gtk_builder_add_from_file (builder, "test-2.ui", &error);
+  gtk_builder_add_from_file (builder, "test-4.ui", &error);
+  gtk_builder_set_translation_domain (builder, "test");
   gtk_builder_connect_signals_full (builder, connect, (gpointer) "script");
   g_assert_no_error (error);
 

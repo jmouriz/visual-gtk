@@ -1,6 +1,7 @@
 /* g-script-js.c
  *
  * Copyright (C) 2011 Christian Hergert <chris@dronelabs.com>
+ * Copyright (C) 2014 Juan Manuel Mouriz <jmouriz@gmail.com>
  *
  * This file is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +19,7 @@
 
 #include "g-script-js-private.h"
 
+#include <gi/object.h>
 #include <gi/closure.h>
 #include <gi/value.h>
 #include <glib/gi18n.h>
@@ -130,7 +132,7 @@ g_script_js_free (GScriptJs *script)
 
 /**
  * g_script_js_get_closure:
- * @js: (in): A #GScriptJs.
+ * @script: (in): A #GScriptJs.
  * @function: (in): TODO
  *
  * TODO
@@ -284,6 +286,14 @@ g_script_js_get_javascript (GScriptJs *script)
 /*
  * TODO
  */
+GjsContext *
+g_script_js_get_context (GScriptJs *script)
+{
+  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
+
+  return script->priv->context;
+}
+
 GSList *
 g_script_js_get_functions (GScriptJs *script)
 {
@@ -303,6 +313,11 @@ g_script_js_evaluate (GScriptJs *script)
   glong length;
 
   g_return_val_if_fail (G_IS_SCRIPT_JS (script), FALSE);
+
+  gint res;
+  gjs_context_eval_file (script->priv->context, script->priv->filename, &res, NULL);
+
+  return TRUE;
 
   error = NULL;
   length = g_utf8_strlen (script->priv->javascript, G_MAXLONG);
@@ -390,10 +405,22 @@ g_script_js_get_property (GObject *object, guint prop_id, GValue *value, GParamS
   }
 }
 
+/**
+ * g_script_js_new:
+ *
+ * TODO
+ *
+ * Returns: A #GScriptJs
+ */
 GScriptJs *
 g_script_js_new (void)
 {
-  return (GScriptJs *) g_object_new (G_TYPE_SCRIPT_JS, NULL);
+  GScriptJs *script;
+
+  script = (GScriptJs *) g_object_new (G_TYPE_SCRIPT_JS, NULL);
+
+  return script;
+  //return G_SCRIPT_JS (g_object_new (G_TYPE_SCRIPT_JS, NULL));
 }
 
 /**
@@ -466,6 +493,33 @@ gtk_buildable_init (GtkBuildableIface *iface)
 void
 g_script_js_set_object (GScriptJs *script, const gchar *name, GObject *object)
 {
+  JSContext *context;
+  JSObject *global;
+  JSObject *instance;
+  JSBool ok;
+  jsval value;
+  GScriptJsPrivate *priv;
+
+  priv = script->priv;
+
+  context = (JSContext *) gjs_context_get_native_context (priv->context);
+
+  //JS_BeginRequest (context);
+
+  global = gjs_get_import_global (context);
+  instance = gjs_object_from_g_object (context, object);
+  value = OBJECT_TO_JSVAL (instance);
+
+  g_print ("%s %d %s\n", __FILE__, __LINE__, __FUNCTION__);
+
+  //ok = JS_DefineProperty (context, global, name, value, JS_PropertyStub, JS_StrictPropertyStub,
+  //                        GJS_MODULE_PROP_FLAGS | JSPROP_READONLY);
+  ok = JS_DefineProperty (context, global, name, value, NULL, NULL,
+                          JSPROP_READONLY | JSPROP_PERMANENT);
+
+  g_assert_cmpint (ok, ==, JS_TRUE);
+
+  //JS_EndRequest (context);
 }
 
 static void
@@ -563,7 +617,7 @@ g_script_js_introspect_functions (GScriptJs *script)
   /* run code (parse script) */
   error = NULL;
   length = g_utf8_strlen (javascript, G_MAXLONG);
-  success = gjs_context_eval (priv->context, javascript, length, "__gtkbuilder_internal__", NULL, &error);
+  success = gjs_context_eval (priv->context, javascript, length, "__gtk_builder_internal__", NULL, &error);
 
   if (!success)
   {

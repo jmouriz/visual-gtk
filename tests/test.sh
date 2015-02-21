@@ -11,3 +11,5 @@ function test
 
 test test-2
 test test-3
+
+rm *.ui~

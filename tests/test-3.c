@@ -1,7 +1,7 @@
 #include <gtk/gtk.h>
 #include <cjs/gjs-module.h>
 
-#include "g-script-js.h"
+#include <g-script-js.h>
 
 static void
 connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar *handler, GObject *connect_object, GConnectFlags flags, gpointer data)
@@ -15,8 +15,6 @@ connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar 
   g_return_if_fail (connect_object == NULL); /* TODO */
 
   script = G_SCRIPT_JS (gtk_builder_get_object (builder, name));
-
-  g_script_js_set_object (script, "builer", G_OBJECT (builder));
 
   if (!script)
   {

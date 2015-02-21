@@ -33,10 +33,10 @@ GLADE_MAKE_EPROP (GladeEPropJavascript, glade_eprop_javascript)
 static void
 glade_eprop_javascript_finalize (GObject *object)
 {
-  /* Chain up */
   GObjectClass *parent_class =
       g_type_class_peek_parent (G_OBJECT_GET_CLASS (object));
 
+  /* Chain up */
   G_OBJECT_CLASS (parent_class)->finalize (object);
 }
 
@@ -48,6 +48,7 @@ glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property
   GValue *value;
   const gchar *string;
 
+  /* Chain up */
   parent_class->load (eprop, property);
 
   if (!property)
@@ -66,9 +67,7 @@ glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property
     g_free (value);
   }
 
-  g_print ("%s (%d) : %s (%s)\n", __FILE__, __LINE__, __FUNCTION__, string);
-
-  if (string && strlen (string) > 0)
+  if (string) // && strlen (string) > 0)
   {
     g_script_js_editor_set_javascript (G_SCRIPT_JS_EDITOR (javascript->editor), string);
   }
@@ -82,8 +81,6 @@ glade_eprop_javascript_edited (GScriptJsEditor *editor, const gchar *javascript,
   g_value_init (&value, G_TYPE_STRING);
   g_value_take_string (&value, (gchar *) javascript);
   
-  g_print ("%s (%d) : %s (%s)\n", __FILE__, __LINE__, __FUNCTION__, javascript);
-
   glade_editor_property_commit (GLADE_EDITOR_PROPERTY (data), &value);
 }
 
@@ -91,8 +88,6 @@ static GtkWidget *
 glade_eprop_javascript_create_input (GladeEditorProperty *eprop)
 {
   GladeEPropJavascript *javascript = GLADE_EPROP_JAVASCRIPT (eprop);
-
-  g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
 
   javascript->editor = g_script_js_editor_new ();
 
@@ -117,9 +112,9 @@ glade_g_script_js_set_javascript (GObject *object, const GValue *value)
     return;
   }
 
+  g_print ("%s (%d) : %s (%s)\n", __FILE__, __LINE__, __FUNCTION__, g_value_get_string (value));
+
   g_script_js_set_javascript (G_SCRIPT_JS (object), g_value_get_string (value));
 
-  editor = glade_widget_get_from_gobject (object);
-
-  g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
+  //editor = glade_widget_get_from_gobject (object);
 }

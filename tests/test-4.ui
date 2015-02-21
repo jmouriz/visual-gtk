@@ -1,42 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.18.3 -->
 <interface>
-  <requires lib="g-script-js" version="1.0"/>
+  <requires lib="g-script-js" version="2.0"/>
   <requires lib="gtk+" version="3.0"/>
   <object class="GScriptJs" id="script">
-    <property name="javascript">var Gtk = imports.gi.Gtk;
-
-var version = function()
-{
-  return Gtk.MAJOR_VERSION + '.' + Gtk.MINOR_VERSION + '.' + Gtk.MICRO_VERSION
-}
-
-function alert(message)
-{
-  let d = new Gtk.MessageDialog();
-  d.add_button("Close", 0);
-  d.set_markup(message);
-  d.run();
-  d.destroy();
-}
-
-function onQuit() { Gtk.main_quit() }
-
-function onClicked(widget, data)
-{
-  let d = new Gtk.Dialog();
-  let l = new Gtk.Label();
-  let b = new Gtk.Button();
-  let c = d.get_content_area();
-  b.set_label("View GTK+ version");
-  b.connect("clicked", function() { alert("GTK+ " + version()) });
-  l.set_text("You clicked on '" + widget.get_label() + "'");
-  c.add(l);
-  c.add(b);
-  c.show_all();
-  d.run();
-  d.destroy();
-}</property>
+    <property name="filename">../tests/test-4.js</property>
   </object>
   <object class="GtkWindow" id="window">
     <property name="can_focus">False</property>

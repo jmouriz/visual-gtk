@@ -3,3 +3,5 @@ In Ubuntu 14.10, at least the packages:
 libcjs-dev
 libgladeui-dev
 libgtksourceview-3.0-dev
+
+gobject-introspection
