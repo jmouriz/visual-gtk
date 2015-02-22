@@ -130,7 +130,7 @@ g_script_editor_init (GScriptEditor *editor)
   GtkSourceLanguageManager *manager;
   GtkSourceLanguage *language;
 
-  editor->priv = G_TYPE_INSTANCE_GET_PRIVATE ((editor), G_TYPE_SCRIPT_JS_EDITOR, GScriptEditorPrivate);
+  editor->priv = G_TYPE_INSTANCE_GET_PRIVATE ((editor), G_TYPE_SCRIPT_EDITOR, GScriptEditorPrivate);
 
   manager = gtk_source_language_manager_get_default ();
   language = gtk_source_language_manager_get_language (manager, "js");
@@ -155,7 +155,7 @@ g_script_editor_new (void)
   Data *data;
 
   data = (Data *) g_malloc (sizeof (Data));
-  editor = (GScriptEditor *) g_object_new (G_TYPE_SCRIPT_JS_EDITOR, NULL);
+  editor = (GScriptEditor *) g_object_new (G_TYPE_SCRIPT_EDITOR, NULL);
   data->self = editor;
   data->priv = editor->priv;
 
@@ -215,7 +215,7 @@ g_script_editor_set_javascript (GScriptEditor *editor, const gchar *javascript)
   GScriptEditorPrivate *priv;
   GtkTextIter cursor;
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS_EDITOR (editor), FALSE);
+  g_return_val_if_fail (G_IS_SCRIPT_EDITOR (editor), FALSE);
 
   priv = editor->priv;
 
@@ -239,7 +239,7 @@ g_script_editor_set_javascript (GScriptEditor *editor, const gchar *javascript)
 const gchar *
 g_script_editor_get_javascript (GScriptEditor *editor)
 {
-  g_return_val_if_fail (G_IS_SCRIPT_JS_EDITOR (editor), FALSE);
+  g_return_val_if_fail (G_IS_SCRIPT_EDITOR (editor), FALSE);
 
   return g_script_get_javascript (editor->priv->script);
 }

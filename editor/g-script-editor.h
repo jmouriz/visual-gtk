@@ -24,13 +24,13 @@
 
 G_BEGIN_DECLS
 
-#define G_TYPE_SCRIPT_JS_EDITOR            (g_script_editor_get_type())
-#define G_SCRIPT_EDITOR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_SCRIPT_JS_EDITOR, GScriptEditor))
-#define G_SCRIPT_EDITOR_CONST(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_SCRIPT_JS_EDITOR, GScriptEditor const))
-#define G_SCRIPT_EDITOR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  G_TYPE_SCRIPT_JS_EDITOR, GScriptEditorClass))
-#define G_IS_SCRIPT_JS_EDITOR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), G_TYPE_SCRIPT_JS_EDITOR))
-#define G_IS_SCRIPT_JS_EDITOR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  G_TYPE_SCRIPT_JS_EDITOR))
-#define G_SCRIPT_EDITOR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  G_TYPE_SCRIPT_JS_EDITOR, GScriptEditorClass))
+#define G_TYPE_SCRIPT_EDITOR            (g_script_editor_get_type())
+#define G_SCRIPT_EDITOR(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_SCRIPT_EDITOR, GScriptEditor))
+#define G_SCRIPT_EDITOR_CONST(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_SCRIPT_EDITOR, GScriptEditor const))
+#define G_SCRIPT_EDITOR_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  G_TYPE_SCRIPT_EDITOR, GScriptEditorClass))
+#define G_IS_SCRIPT_EDITOR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), G_TYPE_SCRIPT_EDITOR))
+#define G_IS_SCRIPT_EDITOR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  G_TYPE_SCRIPT_EDITOR))
+#define G_SCRIPT_EDITOR_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  G_TYPE_SCRIPT_EDITOR, GScriptEditorClass))
 
 typedef struct _GScriptEditor        GScriptEditor;
 typedef struct _GScriptEditorClass   GScriptEditorClass;

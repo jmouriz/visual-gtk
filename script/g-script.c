@@ -30,6 +30,9 @@
 
 #define MODULES "../modules"
 
+#define G_SCRIPT_TYPE G_TYPE_SCRIPT
+#define IS_G_SCRIPT   G_IS_SCRIPT
+
 enum
 {
   PROP_0,
@@ -129,7 +132,7 @@ g_script_free (GScript *script)
 {
   if (!script) return;
 
-  g_return_if_fail (G_IS_SCRIPT_JS (script));
+  g_return_if_fail (IS_G_SCRIPT (script));
 
   g_script_javascript_free (script);
 
@@ -158,7 +161,7 @@ g_script_get_closure (GScript *script, const gchar *function)
   JSBool success;
   jsval value = { 0 };
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
+  g_return_val_if_fail (IS_G_SCRIPT (script), NULL);
 
   callable = NULL;
   priv = script->priv;
@@ -202,7 +205,7 @@ g_script_set_javascript (GScript *script, const gchar *javascript)
 {
   GScriptPrivate *priv;
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), FALSE);
+  g_return_val_if_fail (IS_G_SCRIPT (script), FALSE);
   g_return_val_if_fail (javascript != NULL, FALSE);
 
   priv = script->priv;
@@ -227,7 +230,7 @@ g_script_set_filename (GScript *script, const gchar *filename)
   char *javascript;
   gsize length;
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), FALSE);
+  g_return_val_if_fail (IS_G_SCRIPT (script), FALSE);
   g_return_val_if_fail (filename != NULL, FALSE);
 
   priv = script->priv;
@@ -273,7 +276,7 @@ g_script_save (GScript *script)
 gchar * /* const */
 g_script_get_filename (GScript *script)
 {
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
+  g_return_val_if_fail (IS_G_SCRIPT (script), NULL);
 
   return script->priv->filename;
 }
@@ -284,7 +287,7 @@ g_script_get_filename (GScript *script)
 gchar *
 g_script_get_javascript (GScript *script)
 {
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
+  g_return_val_if_fail (IS_G_SCRIPT (script), NULL);
 
   return script->priv->javascript;
 }
@@ -295,7 +298,7 @@ g_script_get_javascript (GScript *script)
 GjsContext *
 g_script_get_context (GScript *script)
 {
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
+  g_return_val_if_fail (IS_G_SCRIPT (script), NULL);
 
   return script->priv->context;
 }
@@ -306,12 +309,12 @@ g_script_get_context (GScript *script)
  *
  * TODO
  *
- * Return value: A #GSList.
+ * Return value: (element-type GScript) (transfer container): A #GSList of ##GScript.
  */
 GSList *
 g_script_get_functions (GScript *script)
 {
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), NULL);
+  g_return_val_if_fail (IS_G_SCRIPT (script), NULL);
 
   return script->priv->functions;
 }
@@ -326,7 +329,7 @@ g_script_evaluate (GScript *script)
   gboolean success;
   glong length;
 
-  g_return_val_if_fail (G_IS_SCRIPT_JS (script), FALSE);
+  g_return_val_if_fail (IS_G_SCRIPT (script), FALSE);
 
   error = NULL;
   length = g_utf8_strlen (script->priv->javascript, G_MAXLONG);
@@ -415,16 +418,16 @@ g_script_get_property (GObject *object, guint prop_id, GValue *value, GParamSpec
 }
 
 /**
- * g_script_new:
+ * g_script_new: (constructor)
  *
- * TODO
+ * Allocates a new #GScript.
  *
- * Returns: A new #GScript.
+ * Return value: (transfer full): A new #GScript.
  */
 GScript *
 g_script_new (void)
 {
-  return G_SCRIPT (g_object_new (G_TYPE_SCRIPT_JS, NULL));
+  return G_SCRIPT (g_object_new (G_SCRIPT_TYPE, NULL));
 }
 
 /**
@@ -450,7 +453,7 @@ g_script_class_init (GScriptClass *klass)
   /**
    * GScript:filename:
    *
-   * TODO
+   * A external script filename.
    */
   gParamSpecs[PROP_FILENAME] = g_param_spec_string ("filename",
                                                     _("Filename"),
@@ -461,7 +464,7 @@ g_script_class_init (GScriptClass *klass)
   /**
    * GScript:javascript:
    *
-   * TODO
+   * A internal JavaScript code to evaluate.
    */
   gParamSpecs[PROP_JAVASCRIPT] = g_param_spec_string ("javascript",
                                                       _("Javascript"),
@@ -477,17 +480,16 @@ g_script_class_init (GScriptClass *klass)
 
 /**
  * g_script_init:
- * @: (in): A #GScript.
+ * @script: (in): A #GScript.
  *
  * Initializes the newly created #GScript instance.
  *
- * Returns: None.
- * Side effects: None.
+ * Return value: None.
  */
 static void
 g_script_init (GScript *script)
 {
-  script->priv = G_TYPE_INSTANCE_GET_PRIVATE(script, G_TYPE_SCRIPT_JS, GScriptPrivate);
+  script->priv = G_TYPE_INSTANCE_GET_PRIVATE(script, G_SCRIPT_TYPE, GScriptPrivate);
 
   script->priv->context = gjs_context_new ();
 

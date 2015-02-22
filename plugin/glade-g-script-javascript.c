@@ -28,8 +28,6 @@
 
 GLADE_MAKE_EPROP (GladeEPropJavascript, glade_eprop_javascript)
 
-//GType glade_eprop_javascript_get_type (void) G_GNUC_CONST;
-
 static void
 glade_eprop_javascript_finalize (GObject *object)
 {

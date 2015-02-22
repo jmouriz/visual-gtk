@@ -1,18 +1,7 @@
+imports.searchPath.unshift('.'); 
+
+var module = imports.module;
 var Gtk = imports.gi.Gtk;
-
-var version = function()
-{
-  return Gtk.MAJOR_VERSION + '.' + Gtk.MINOR_VERSION + '.' + Gtk.MICRO_VERSION
-}
-
-function alert(message)
-{
-  let dialog = new Gtk.MessageDialog();
-  dialog.add_button("Close", 0);
-  dialog.set_markup(message);
-  dialog.run();
-  dialog.destroy();
-}
 
 function onClicked(widget, data)
 {
@@ -24,7 +13,7 @@ function onClicked(widget, data)
   button.set_label("View GTK+ version");
   button.connect("clicked", function()
   {
-    alert("GTK+ " + version())
+    module.alert("GTK+ " + module.version())
   });
 
   label.set_text("You clicked on '" + widget.get_label() + "'");
@@ -40,5 +29,5 @@ function onClicked(widget, data)
 
 function onQuit()
 {
-  Gtk.main_quit()
+  module.quit();
 }

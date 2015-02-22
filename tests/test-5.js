@@ -1,7 +1,7 @@
 #!/usr/bin/env cjs
 
 const Gtk = imports.gi.Gtk;
-const GScriptJs = imports.gi.GScriptJs;
+const GScript = imports.gi.G;
 const Lang = imports.lang;
 
 const Callbacks = new Lang.Class({
@@ -25,14 +25,16 @@ const Callbacks = new Lang.Class({
 
 Gtk.init(null);
 
+let script = new GScript.Script(); /* unused object, just a hack for register type */
+
 let builder = new Gtk.Builder();
 let callbacks = new Callbacks();
 
 builder.add_from_file("test-5.ui");
 builder.connect_signals_full(Lang.bind(callbacks, callbacks._connector));
 
-let window = builder.get_object("window");
+let w = builder.get_object("window");
 
-window.present();
+w.present();
 
 Gtk.main();

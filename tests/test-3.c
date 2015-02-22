@@ -53,7 +53,7 @@ main (int argc, gchar *argv[])
 
   gtk_init (&argc, &argv);
 
-  g_debug ("Registering type: %s", g_type_name (G_TYPE_SCRIPT_JS)); /* linker hack */
+  g_debug ("Registering type: %s", g_type_name (G_TYPE_SCRIPT)); /* linker hack */
 
   builder = gtk_builder_new();
   error = NULL;

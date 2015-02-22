@@ -1,7 +1,7 @@
 #!/usr/bin/env cjs
 
-const GS = imports.gi.GScriptJs;
+const JS = imports.gi.G;
 
-let script = new GS.GScriptJs();
+let script = new JS.Script();
 
 print(script.toString());

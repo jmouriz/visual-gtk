@@ -23,13 +23,13 @@
 
 G_BEGIN_DECLS
 
-#define G_TYPE_SCRIPT_JS            (g_script_get_type())
-#define G_SCRIPT(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_SCRIPT_JS, GScript))
-#define G_SCRIPT_CONST(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_SCRIPT_JS, GScript const))
-#define G_SCRIPT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  G_TYPE_SCRIPT_JS, GScriptClass))
-#define G_IS_SCRIPT_JS(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), G_TYPE_SCRIPT_JS))
-#define G_IS_SCRIPT_JS_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  G_TYPE_SCRIPT_JS))
-#define G_SCRIPT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  G_TYPE_SCRIPT_JS, GScriptClass))
+#define G_TYPE_SCRIPT            (g_script_get_type())
+#define G_SCRIPT(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_SCRIPT, GScript))
+#define G_SCRIPT_CONST(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), G_TYPE_SCRIPT, GScript const))
+#define G_SCRIPT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  G_TYPE_SCRIPT, GScriptClass))
+#define G_IS_SCRIPT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), G_TYPE_SCRIPT))
+#define G_IS_SCRIPT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  G_TYPE_SCRIPT))
+#define G_SCRIPT_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  G_TYPE_SCRIPT, GScriptClass))
 
 typedef struct _GScript        GScript;
 typedef struct _GScriptClass   GScriptClass;
@@ -50,32 +50,39 @@ struct _GScriptClass
 
 GType         g_script_get_type       (void) G_GNUC_CONST;
 
-GScript    *g_script_new            (void);
+/**
+ * g_script_new: (constructor)
+ *
+ * TODO
+ *
+ * Returns: (transfer full): A #GScript.
+ */
+GScript      *g_script_new            (void);
 
 void          g_script_free           (GScript *script);
 
-GClosure     *g_script_get_closure    (GScript   *script,
-                                          const gchar *function);
+GClosure     *g_script_get_closure    (GScript     *script,
+                                       const gchar *function);
 
-gboolean      g_script_set_filename   (GScript   *script,
-                                          const gchar *filename);
+gboolean      g_script_set_filename   (GScript     *script,
+                                       const gchar *filename);
 
-gboolean      g_script_set_javascript (GScript   *script,
-                                          const gchar *javascript);
+gboolean      g_script_set_javascript (GScript     *script,
+                                       const gchar *javascript);
 
-gchar        *g_script_get_filename   (GScript   *script);
+gchar        *g_script_get_filename   (GScript     *script);
 
-gchar        *g_script_get_javascript (GScript   *script);
+gchar        *g_script_get_javascript (GScript     *script);
 
-GSList       *g_script_get_functions  (GScript   *script);
+GSList       *g_script_get_functions  (GScript     *script);
 
-void          g_script_set_object     (GScript   *script,
-                                          const gchar *name,
-                                          GObject     *object);
+void          g_script_set_object     (GScript     *script,
+                                       const gchar *name,
+                                       GObject     *object);
 
-gboolean      g_script_save           (GScript   *script);
+gboolean      g_script_save           (GScript     *script);
 
-gboolean      g_script_evaluate       (GScript   *script);
+gboolean      g_script_evaluate       (GScript     *script);
 
 G_END_DECLS
 

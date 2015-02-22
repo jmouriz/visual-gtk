@@ -38,11 +38,11 @@ typedef struct _GScriptFunction
   GScriptPosition end;
 } GScriptFunction;
 
-GScriptFunction *g_script_function_new  (const gchar       *name,
-                                              GScriptPosition  start,
-                                              GScriptPosition  end);
+GScriptFunction *g_script_function_new  (const gchar     *name,
+                                         GScriptPosition  start,
+                                         GScriptPosition  end);
 
-void               g_script_function_free (GScriptFunction *function);
+void             g_script_function_free (GScriptFunction *function);
 
 G_END_DECLS
 

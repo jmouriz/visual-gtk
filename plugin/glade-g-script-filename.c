@@ -24,9 +24,7 @@
 
 GLADE_MAKE_EPROP (GladeEPropFilename, glade_eprop_filename)
 
-//GType glade_eprop_filename_get_type (void) G_GNUC_CONST;
-
-static void glade_eprop_filename_changed (GladeEditorProperty *, GladeProperty *, gpointer);
+//static void glade_eprop_filename_changed (GladeEditorProperty *, GladeProperty *, gpointer);
 
 static void
 glade_eprop_filename_finalize (GObject *object)
