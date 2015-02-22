@@ -22,7 +22,7 @@
 #include <gladeui/glade.h>
 #include <g-script-editor.h>
 
-#include <glade-g-script.h>
+#include "glade-g-script.h"
 
 #include "glade-g-script-javascript.h"
 
@@ -103,7 +103,8 @@ glade_eprop_javascript_create_input (GladeEditorProperty *eprop)
 void
 glade_g_script_set_javascript (GObject *object, const GValue *value)
 {
-  GladeWidget *editor;
+  //GladeWidget *editor;
+  //editor = glade_widget_get_from_gobject (object);
 
   g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
 
@@ -115,6 +116,4 @@ glade_g_script_set_javascript (GObject *object, const GValue *value)
   g_print ("%s (%d) : %s (%s)\n", __FILE__, __LINE__, __FUNCTION__, g_value_get_string (value));
 
   g_script_set_javascript (G_SCRIPT (object), g_value_get_string (value));
-
-  //editor = glade_widget_get_from_gobject (object);
 }

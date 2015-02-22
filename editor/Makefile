@@ -6,7 +6,7 @@ LIBRARIES=`pkg-config --libs gtksourceview-3.0` -L../script/.libs
 OBJECTS=g-script-editor.lo
 SOURCES=g-script-editor.c g-script-editor.h g-script-editor-private.h
 
-all: libgscript-editor.la $(TYPELIB)
+all: libgscript-editor.la
 
 libgscript-editor.la: $(OBJECTS)	
 	libtool link $(CC) $(LIBRARIES) $(OBJECTS) -rpath `pwd`/.libs -o $@ 
