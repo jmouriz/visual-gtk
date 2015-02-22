@@ -1,6 +1,6 @@
-/* g-script-js-private.h
+/* g-script-function.c
  *
- * Copyright (C) 2011 Christian Hergert <chris@dronelabs.com>
+ * Copyright (C) 2013 Juan Manuel Mouriz <jmouriz@gmail.com>
  *
  * This file is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,23 +16,31 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef G_SCRIPT_JS_PRIVATE_H
-#define G_SCRIPT_JS_PRIVATE_H
+#include <stdlib.h>
 
-#include <cjs/gjs-module.h>
+#include "g-script-function.h"
 
-G_BEGIN_DECLS
-
-struct _GScriptJsPrivate
+GScriptFunction *
+g_script_function_new (const gchar *name, GScriptPosition start, GScriptPosition end)
 {
-  GjsContext *context;
+  GScriptFunction *function = g_new (GScriptFunction, 1);
 
-  gchar *filename;
-  gchar *javascript;
+  function->name = g_strdup (name);
+  function->start = start;
+  function->end = end;
 
-  GSList *functions;
-};
+  return function;
+}
 
-G_END_DECLS
-
-#endif /* G_SCRIPT_JS_PRIVATE_H */
+void
+g_script_function_free (GScriptFunction *function)
+{
+  if (function)
+  {
+    if (function->name)
+    {
+      g_free (function->name);
+    }
+    g_free (function);
+  }
+}

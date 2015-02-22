@@ -14,4 +14,4 @@ typedef struct
 
 GType glade_eprop_filename_get_type (void) G_GNUC_CONST;
 
-void glade_g_script_js_set_filename (GObject *object, const GValue *value);
+void glade_g_script_set_filename (GObject *object, const GValue *value);

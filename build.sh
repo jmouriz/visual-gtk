@@ -1,7 +1,9 @@
-for folder in script editor plugin tests examples; do
+make
+
+for folder in plugin tests; do
   echo Building $folder
   cd $folder
-  . compile.sh
+  ./compile.sh
   cd ..
   echo Done
 done

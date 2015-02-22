@@ -1,4 +1,4 @@
-/* glade-g-script-js.c
+/* glade-g-script.c
  *
  * Copyright (C) 2013 Juan Manuel Mouriz <jmouriz@gmail.com>
  *
@@ -18,10 +18,10 @@
  */
 
 #include <gladeui/glade.h>
-#include <g-script-js.h>
+#include <g-script.h>
 
-#include "glade-g-script-js-filename.h"
-#include "glade-g-script-js-javascript.h"
+#include "glade-g-script-filename.h"
+#include "glade-g-script-javascript.h"
 
 #include <gtk/gtk.h>
 #include <string.h>
@@ -38,15 +38,15 @@ empty (GObject * container, GladeCreateReason reason)
 }
 
 void
-glade_g_script_js_set_property (GladeWidgetAdaptor *adaptor, GObject *object, const gchar *id, const GValue *value)
+glade_g_script_set_property (GladeWidgetAdaptor *adaptor, GObject *object, const gchar *id, const GValue *value)
 {
   if (!strcmp (id, "filename"))
   {
-    glade_g_script_js_set_filename (object, value);
+    glade_g_script_set_filename (object, value);
   }
   else if (!strcmp (id, "javascript"))
   {
-    glade_g_script_js_set_javascript (object, value);
+    glade_g_script_set_javascript (object, value);
   }
   /*
   else
@@ -58,7 +58,7 @@ glade_g_script_js_set_property (GladeWidgetAdaptor *adaptor, GObject *object, co
 
 /*
 void
-glade_g_script_js_read_widget (GladeWidgetAdaptor *adaptor, GladeWidget *widget, GladeXmlNode *node)
+glade_g_script_read_widget (GladeWidgetAdaptor *adaptor, GladeWidget *widget, GladeXmlNode *node)
 {
   GladeProperty *prop;
 
@@ -72,14 +72,14 @@ glade_g_script_js_read_widget (GladeWidgetAdaptor *adaptor, GladeWidget *widget,
 
   // Sync properties after a load...
   prop = glade_widget_get_property (widget, "filename");
-  glade_g_script_js_set_filename (glade_widget_get_object (widget), glade_property_inline_value (prop));
+  glade_g_script_set_filename (glade_widget_get_object (widget), glade_property_inline_value (prop));
 
   prop = glade_widget_get_property (widget, "javascript");
-  glade_g_script_js_set_javascript (glade_widget_get_object (widget), glade_property_inline_value (prop));
+  glade_g_script_set_javascript (glade_widget_get_object (widget), glade_property_inline_value (prop));
 }
 
 void
-glade_g_script_js_write_widget (GladeWidgetAdaptor *adaptor, GladeWidget  *widget,
+glade_g_script_write_widget (GladeWidgetAdaptor *adaptor, GladeWidget  *widget,
                                 GladeXmlContext    *context, GladeXmlNode *node)
 {
   GladeXmlNode *attrs_node;
@@ -95,7 +95,7 @@ glade_g_script_js_write_widget (GladeWidgetAdaptor *adaptor, GladeWidget  *widge
 */
 
 GladeEditorProperty *
-glade_g_script_js_create_eprop (GladeWidgetAdaptor *adaptor, GladePropertyClass *klass, gboolean use_command)
+glade_g_script_create_eprop (GladeWidgetAdaptor *adaptor, GladePropertyClass *klass, gboolean use_command)
 {
   GladeEditorProperty *eprop;
 

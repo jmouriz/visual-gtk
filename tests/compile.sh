@@ -1,7 +1,7 @@
 #!/bin/bash
 
 FLAGS="-I../script `pkg-config --cflags gtk+-3.0 cjs-1.0 gobject-introspection-1.0` -Wall -g -ggdb"
-LIBS="-L../script -lg-script-js `pkg-config --libs gtk+-3.0 cjs-1.0 gobject-introspection-1.0` -Wall -g -ggdb"
+LIBS="-L../script/.libs -lgscript `pkg-config --libs gtk+-3.0 cjs-1.0 gobject-introspection-1.0` -Wall -g -ggdb"
 
 function compile
 {

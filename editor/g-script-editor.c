@@ -1,4 +1,4 @@
-/* g-script-js-editor.c
+/* g-script-editor.c
  *
  * Copyright (C) 2013 Juan Manuel Mouriz <jmouriz@gmail.com>
  *
@@ -16,11 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "g-script-js-editor-private.h"
-#include "g-script-js-editor.h"
+#include "g-script-editor-private.h"
+#include "g-script-editor.h"
 
 #include <gtksourceview/gtksource.h>
-#include <g-script-js-function.h>
+#include <g-script-function.h>
 #include <glib/gi18n.h>
 
 enum
@@ -39,9 +39,9 @@ enum
 static GParamSpec *properties[PROP_LAST];
 static guint signals[LAST_SIGNAL] = { 0 };
 
-static void g_script_js_editor_finalize (GObject *);
+static void g_script_editor_finalize (GObject *);
 
-static void fill_store (GScriptJsEditorPrivate *);
+static void fill_store (GScriptEditorPrivate *);
 
 static void move (GtkTextView *, GtkMovementStep, gint, gboolean, gpointer);
 
@@ -51,24 +51,24 @@ static void changed (GtkComboBox *, gpointer);
 
 static gboolean release (GtkWidget *, GdkEvent *, gpointer);
 
-static void g_script_js_editor_set_property (GObject *, guint, const GValue *, GParamSpec *);
+static void g_script_editor_set_property (GObject *, guint, const GValue *, GParamSpec *);
 
 static gboolean _rewind = TRUE;
 
 typedef struct _Data
 {
-  GScriptJsEditorPrivate *priv;
-  GScriptJsEditor *self;
+  GScriptEditorPrivate *priv;
+  GScriptEditor *self;
   GtkWidget *combo;
   GtkWidget *editor;
 } Data;
 
 #define DATA(object) ((Data *) (object))
 
-G_DEFINE_TYPE (GScriptJsEditor, g_script_js_editor, GTK_TYPE_FRAME);
+G_DEFINE_TYPE (GScriptEditor, g_script_editor, GTK_TYPE_FRAME);
 
 static void
-g_script_js_editor_class_init (GScriptJsEditorClass *klass)
+g_script_editor_class_init (GScriptEditorClass *klass)
 {
   GObjectClass *object_class;
   //GtkWidgetClass *widget_class;
@@ -76,10 +76,10 @@ g_script_js_editor_class_init (GScriptJsEditorClass *klass)
   object_class = G_OBJECT_CLASS (klass);
   //widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->finalize = g_script_js_editor_finalize;
-  object_class->set_property = g_script_js_editor_set_property;
-  //object_class->get_property = g_script_js_editor_get_property;
-  g_type_class_add_private (object_class, sizeof (GScriptJsEditorPrivate));
+  object_class->finalize = g_script_editor_finalize;
+  object_class->set_property = g_script_editor_set_property;
+  //object_class->get_property = g_script_editor_get_property;
+  g_type_class_add_private (object_class, sizeof (GScriptEditorPrivate));
 
   /* TODO */
   properties[PROP_JAVASCRIPT] = g_param_spec_string ("javascript",
@@ -94,7 +94,7 @@ g_script_js_editor_class_init (GScriptJsEditorClass *klass)
   signals[EDITED_SIGNAL_HANDLER] = g_signal_new ("edited",
                                                  G_TYPE_FROM_CLASS (object_class),
                                                  G_SIGNAL_RUN_LAST,
-                                                 G_STRUCT_OFFSET (GScriptJsEditorClass, edited),
+                                                 G_STRUCT_OFFSET (GScriptEditorClass, edited),
                                                  NULL,
                                                  NULL,
                                                  g_cclosure_marshal_VOID__STRING,
@@ -105,37 +105,37 @@ g_script_js_editor_class_init (GScriptJsEditorClass *klass)
 
 
 /**
- * g_script_js_editor__finalize:
+ * g_script_editor__finalize:
  *
  * TODO
  */
 static void
-g_script_js_editor_finalize (GObject *object)
+g_script_editor_finalize (GObject *object)
 {
-  GScriptJsEditor *editor = G_SCRIPT_JS_EDITOR (object);
-  GScriptJsEditorPrivate *priv = editor->priv;
+  GScriptEditor *editor = G_SCRIPT_EDITOR (object);
+  GScriptEditorPrivate *priv = editor->priv;
 
-  g_script_js_free (priv->script);
+  g_script_free (priv->script);
 
-  //G_OBJECT_CLASS (g_script_js_editor__parent_class)->finalize (object);
+  //G_OBJECT_CLASS (g_script_editor__parent_class)->finalize (object);
 }
 
 /**
- * g_script_js_editor_init:
+ * g_script_editor_init:
  * TODO
  */
 static void
-g_script_js_editor_init (GScriptJsEditor *editor)
+g_script_editor_init (GScriptEditor *editor)
 {
   GtkSourceLanguageManager *manager;
   GtkSourceLanguage *language;
 
-  editor->priv = G_TYPE_INSTANCE_GET_PRIVATE ((editor), G_TYPE_SCRIPT_JS_EDITOR, GScriptJsEditorPrivate);
+  editor->priv = G_TYPE_INSTANCE_GET_PRIVATE ((editor), G_TYPE_SCRIPT_JS_EDITOR, GScriptEditorPrivate);
 
   manager = gtk_source_language_manager_get_default ();
   language = gtk_source_language_manager_get_language (manager, "js");
 
-  editor->priv->script = g_script_js_new ();
+  editor->priv->script = g_script_new ();
   editor->priv->store =  gtk_list_store_new (5, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT);
   editor->priv->buffer =  gtk_source_buffer_new_with_language (language);
 }
@@ -144,18 +144,18 @@ g_script_js_editor_init (GScriptJsEditor *editor)
  * TODO
  */
 GtkWidget *
-g_script_js_editor_new (void)
+g_script_editor_new (void)
 {
   //GtkWidget *combo;
   GtkWidget *box;
   GtkWidget *area;
   GtkCellRenderer *cell;
-  GScriptJsEditor *editor;
-  //GScriptJsEditorPrivate *priv;
+  GScriptEditor *editor;
+  //GScriptEditorPrivate *priv;
   Data *data;
 
   data = (Data *) g_malloc (sizeof (Data));
-  editor = (GScriptJsEditor *) g_object_new (G_TYPE_SCRIPT_JS_EDITOR, NULL);
+  editor = (GScriptEditor *) g_object_new (G_TYPE_SCRIPT_JS_EDITOR, NULL);
   data->self = editor;
   data->priv = editor->priv;
 
@@ -210,9 +210,9 @@ g_script_js_editor_new (void)
  * TODO
  */
 gboolean
-g_script_js_editor_set_javascript (GScriptJsEditor *editor, const gchar *javascript)
+g_script_editor_set_javascript (GScriptEditor *editor, const gchar *javascript)
 {
-  GScriptJsEditorPrivate *priv;
+  GScriptEditorPrivate *priv;
   GtkTextIter cursor;
 
   g_return_val_if_fail (G_IS_SCRIPT_JS_EDITOR (editor), FALSE);
@@ -228,7 +228,7 @@ g_script_js_editor_set_javascript (GScriptJsEditor *editor, const gchar *javascr
 
   //gtk_text_view_place_cursor_onscreen (GTK_TEXT_VIEW (view));
 
-  g_script_js_set_javascript (priv->script, javascript);
+  g_script_set_javascript (priv->script, javascript);
 
   return TRUE;
 }
@@ -237,22 +237,22 @@ g_script_js_editor_set_javascript (GScriptJsEditor *editor, const gchar *javascr
  * TODO
  */
 const gchar *
-g_script_js_editor_get_javascript (GScriptJsEditor *editor)
+g_script_editor_get_javascript (GScriptEditor *editor)
 {
   g_return_val_if_fail (G_IS_SCRIPT_JS_EDITOR (editor), FALSE);
 
-  return g_script_js_get_javascript (editor->priv->script);
+  return g_script_get_javascript (editor->priv->script);
 }
 
 static void
 modified (GtkTextBuffer *buffer, gpointer data)
 {
-  GScriptJsEditor *self;
+  GScriptEditor *self;
   GtkWidget *combo;
   GtkWidget *editor;
   GtkTextIter start;
   GtkTextIter end;
-  GScriptJsEditorPrivate *priv;
+  GScriptEditorPrivate *priv;
   gboolean modified;
   gchar *javascript;
 
@@ -272,7 +272,7 @@ modified (GtkTextBuffer *buffer, gpointer data)
 
   javascript = gtk_text_buffer_get_text (buffer, &start, &end, FALSE);
 
-  g_script_js_set_javascript (priv->script, javascript);
+  g_script_set_javascript (priv->script, javascript);
 
   fill_store (priv);
 
@@ -355,8 +355,8 @@ move (GtkTextView *editor, GtkMovementStep step, gint count, gboolean select, gp
   gboolean success;
   gint index;
   gint last;
-  GScriptJsPosition start;
-  GScriptJsPosition end;
+  GScriptPosition start;
+  GScriptPosition end;
   gint line;
   gint column;
 
@@ -406,13 +406,13 @@ move (GtkTextView *editor, GtkMovementStep step, gint count, gboolean select, gp
 }
 
 static void
-fill_store (GScriptJsEditorPrivate *priv)
+fill_store (GScriptEditorPrivate *priv)
 {
-  GScriptJsFunction *function;
+  GScriptFunction *function;
   GSList *functions;
   GSList *node;
 
-  functions = g_script_js_get_functions (priv->script);
+  functions = g_script_get_functions (priv->script);
 
   if (functions)
   {
@@ -422,7 +422,7 @@ fill_store (GScriptJsEditorPrivate *priv)
 
     for (node = functions; node != NULL; node = g_slist_next (node))
     {
-      function = G_SCRIPT_JS_FUNCTION (node->data);
+      function = G_SCRIPT_FUNCTION (node->data);
 
       gtk_list_store_insert_with_values (priv->store, NULL, -1,
                                          0, function->name,
@@ -445,10 +445,10 @@ fill_store (GScriptJsEditorPrivate *priv)
  * Set a given #GObject property.
  */
 static void
-g_script_js_editor_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
+g_script_editor_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
-  GScriptJsEditor *editor = G_SCRIPT_JS_EDITOR (object);
-  GScriptJsEditorPrivate *priv = editor->priv;
+  GScriptEditor *editor = G_SCRIPT_EDITOR (object);
+  GScriptEditorPrivate *priv = editor->priv;
 
   switch (prop_id)
   {
@@ -458,7 +458,7 @@ g_script_js_editor_set_property (GObject *object, guint prop_id, const GValue *v
   
       if (javascript)
       {
-        g_script_js_set_javascript (priv->script, javascript);
+        g_script_set_javascript (priv->script, javascript);
       }
       break;
     }

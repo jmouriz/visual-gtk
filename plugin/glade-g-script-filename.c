@@ -1,6 +1,6 @@
-/* glade-g-script-js-javascript.c
+/* glade-g-script-editor.c
  *
- * Copyright (C) 2015 Juan Manuel Mouriz <jmouriz@gmail.com>
+ * Copyright (C) 2013 Juan Manuel Mouriz <jmouriz@gmail.com>
  *
  * This library is free software; you can redistribute it and/or modify it
  * under the terms of the GNU Lesser General Public License as
@@ -17,21 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <string.h>
-
 #include <gladeui/glade.h>
-#include <g-script-js-editor.h>
 
-#include <glade-g-script-js.h>
+#include "glade-g-script.h"
+#include "glade-g-script-filename.h"
 
-#include "glade-g-script-js-javascript.h"
+GLADE_MAKE_EPROP (GladeEPropFilename, glade_eprop_filename)
 
-GLADE_MAKE_EPROP (GladeEPropJavascript, glade_eprop_javascript)
+//GType glade_eprop_filename_get_type (void) G_GNUC_CONST;
 
-//GType glade_eprop_javascript_get_type (void) G_GNUC_CONST;
+static void glade_eprop_filename_changed (GladeEditorProperty *, GladeProperty *, gpointer);
 
 static void
-glade_eprop_javascript_finalize (GObject *object)
+glade_eprop_filename_finalize (GObject *object)
 {
   GObjectClass *parent_class =
       g_type_class_peek_parent (G_OBJECT_GET_CLASS (object));
@@ -41,10 +39,10 @@ glade_eprop_javascript_finalize (GObject *object)
 }
 
 static void
-glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property)
+glade_eprop_filename_load (GladeEditorProperty *eprop, GladeProperty *property)
 {
   GladeEditorPropertyClass *parent_class = g_type_class_peek_parent (GLADE_EDITOR_PROPERTY_GET_CLASS (eprop));
-  GladeEPropJavascript *javascript = GLADE_EPROP_JAVASCRIPT (eprop);
+  GladeEPropFilename *filename = GLADE_EPROP_FILENAME (eprop);
   GValue *value;
   const gchar *string;
 
@@ -67,46 +65,43 @@ glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property
     g_free (value);
   }
 
-  if (string) // && strlen (string) > 0)
+  if (string)
   {
-    g_script_js_editor_set_javascript (G_SCRIPT_JS_EDITOR (javascript->editor), string);
+    gtk_file_chooser_set_filename (GTK_FILE_CHOOSER (filename->editor), string);
   }
 }
 
 void
-glade_eprop_javascript_edited (GScriptJsEditor *editor, const gchar *javascript, gpointer data)
+glade_eprop_filename_file_set (GtkFileChooserButton *widget, gpointer data)
 {
+  gchar *filename = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER (widget));
   GValue value = G_VALUE_INIT;
 
   g_value_init (&value, G_TYPE_STRING);
-  g_value_take_string (&value, (gchar *) javascript);
+  g_value_take_string (&value, filename);
   
   glade_editor_property_commit (GLADE_EDITOR_PROPERTY (data), &value);
+
+  g_free (filename);
 }
 
 static GtkWidget *
-glade_eprop_javascript_create_input (GladeEditorProperty *eprop)
+glade_eprop_filename_create_input (GladeEditorProperty *eprop)
 {
-  GladeEPropJavascript *javascript = GLADE_EPROP_JAVASCRIPT (eprop);
+  GladeEPropFilename *filename = GLADE_EPROP_FILENAME (eprop);
 
-  javascript->editor = g_script_js_editor_new ();
+  filename->editor = gtk_file_chooser_button_new ("Choose filename", GTK_FILE_CHOOSER_ACTION_OPEN);
 
-  g_signal_connect (G_OBJECT (javascript->editor), "edited", G_CALLBACK (glade_eprop_javascript_edited), (gpointer) eprop);
+  g_signal_connect (G_OBJECT (filename->editor), "file-set", G_CALLBACK (glade_eprop_filename_file_set), (gpointer) eprop);
 
-  gtk_widget_set_size_request (javascript->editor, -1, 200);
+  gtk_widget_show_all (filename->editor);
 
-  gtk_widget_show_all (javascript->editor);
-
-  return javascript->editor;
+  return filename->editor;
 }
 
 void
-glade_g_script_js_set_javascript (GObject *object, const GValue *value)
+glade_g_script_set_filename (GObject *object, const GValue *value)
 {
-  GladeWidget *editor;
-
-  g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
-
   if (g_value_get_string (value) == NULL)
   {
     return;
@@ -114,7 +109,5 @@ glade_g_script_js_set_javascript (GObject *object, const GValue *value)
 
   g_print ("%s (%d) : %s (%s)\n", __FILE__, __LINE__, __FUNCTION__, g_value_get_string (value));
 
-  g_script_js_set_javascript (G_SCRIPT_JS (object), g_value_get_string (value));
-
-  //editor = glade_widget_get_from_gobject (object);
+  g_script_set_filename (G_SCRIPT (object), g_value_get_string (value));
 }

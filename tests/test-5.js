@@ -31,8 +31,8 @@ let callbacks = new Callbacks();
 builder.add_from_file("test-5.ui");
 builder.connect_signals_full(Lang.bind(callbacks, callbacks._connector));
 
-let _window = builder.get_object("window");
+let window = builder.get_object("window");
 
-_window.present();
+window.present();
 
 Gtk.main();

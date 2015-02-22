@@ -1,4 +1,4 @@
-/* g-script-js-function.c
+/* g-script-function.h
  *
  * Copyright (C) 2013 Juan Manuel Mouriz <jmouriz@gmail.com>
  *
@@ -16,31 +16,34 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <stdlib.h>
+#ifndef G_SCRIPT_FUNCTION_H
+#define G_SCRIPT_FUNCTION_H
 
-#include "g-script-js-function.h"
+#include <glib-object.h>
 
-GScriptJsFunction *
-g_script_js_function_new (const gchar *name, GScriptJsPosition start, GScriptJsPosition end)
+G_BEGIN_DECLS
+
+#define G_SCRIPT_FUNCTION(object) ((GScriptFunction *) object)
+
+typedef struct _GScriptPosition
 {
-  GScriptJsFunction *function = g_new (GScriptJsFunction, 1);
+  gint line;
+  gint column;
+} GScriptPosition;
 
-  function->name = g_strdup (name);
-  function->start = start;
-  function->end = end;
-
-  return function;
-}
-
-void
-g_script_js_function_free (GScriptJsFunction *function)
+typedef struct _GScriptFunction
 {
-  if (function)
-  {
-    if (function->name)
-    {
-      g_free (function->name);
-    }
-    g_free (function);
-  }
-}
+  gchar *name;
+  GScriptPosition start;
+  GScriptPosition end;
+} GScriptFunction;
+
+GScriptFunction *g_script_function_new  (const gchar       *name,
+                                              GScriptPosition  start,
+                                              GScriptPosition  end);
+
+void               g_script_function_free (GScriptFunction *function);
+
+G_END_DECLS
+
+#endif /* G_SCRIPT_FUNCTION_H */

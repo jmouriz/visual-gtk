@@ -1,4 +1,4 @@
-/* g-script-js-function.h
+/* g-script-editor--private.h
  *
  * Copyright (C) 2013 Juan Manuel Mouriz <jmouriz@gmail.com>
  *
@@ -16,34 +16,22 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef G_SCRIPT_JS_FUNCTION_H
-#define G_SCRIPT_JS_FUNCTION_H
+#ifndef G_SCRIPT_EDITOR_PRIVATE_H
+#define G_SCRIPT_EDITOR_PRIVATE_H
 
-#include <glib-object.h>
+#include <gtk/gtk.h>
+#include <gtksourceview/gtksourceview.h>
+#include <g-script.h>
 
 G_BEGIN_DECLS
 
-#define G_SCRIPT_JS_FUNCTION(object) ((GScriptJsFunction *) object)
-
-typedef struct _GScriptJsPosition
+struct _GScriptEditorPrivate
 {
-  gint line;
-  gint column;
-} GScriptJsPosition;
-
-typedef struct _GScriptJsFunction
-{
-  gchar *name;
-  GScriptJsPosition start;
-  GScriptJsPosition end;
-} GScriptJsFunction;
-
-GScriptJsFunction *g_script_js_function_new  (const gchar       *name,
-                                              GScriptJsPosition  start,
-                                              GScriptJsPosition  end);
-
-void               g_script_js_function_free (GScriptJsFunction *function);
+  GtkListStore *store;
+  GtkSourceBuffer *buffer;
+  GScript *script;
+};
 
 G_END_DECLS
 
-#endif /* G_SCRIPT_JS_FUNCTION_H */
+#endif /* G_SCRIPT_EDITOR_PRIVATE_H */

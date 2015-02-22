@@ -1,4 +1,4 @@
-/* glade-g-script-js.h
+/* glade-g-script.h
  *
  * Copyright (C) 2013 Juan Manuel Mouriz <jmouriz@gmail.com>
  *
@@ -17,6 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-#include <g-script-js.h>
+#include <g-script.h>
 
 // TODO

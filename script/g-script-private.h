@@ -1,6 +1,6 @@
-/* g-script-js-editor--private.h
+/* g-script-private.h
  *
- * Copyright (C) 2013 Juan Manuel Mouriz <jmouriz@gmail.com>
+ * Copyright (C) 2011 Christian Hergert <chris@dronelabs.com>
  *
  * This file is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -16,22 +16,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef G_SCRIPT_JS_EDITOR_PRIVATE_H
-#define G_SCRIPT_JS_EDITOR_PRIVATE_H
+#ifndef G_SCRIPT_PRIVATE_H
+#define G_SCRIPT_PRIVATE_H
 
-#include <gtk/gtk.h>
-#include <gtksourceview/gtksourceview.h>
-#include <g-script-js.h>
+#include <cjs/gjs-module.h>
 
 G_BEGIN_DECLS
 
-struct _GScriptJsEditorPrivate
+struct _GScriptPrivate
 {
-  GtkListStore *store;
-  GtkSourceBuffer *buffer;
-  GScriptJs *script;
+  GjsContext *context;
+
+  gchar *filename;
+  gchar *javascript;
+
+  GSList *functions;
 };
 
 G_END_DECLS
 
-#endif /* G_SCRIPT_JS_EDITOR_PRIVATE_H */
+#endif /* G_SCRIPT_PRIVATE_H */

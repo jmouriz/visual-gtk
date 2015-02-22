@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.18.3 -->
 <interface>
-  <requires lib="g-script-js" version="2.0"/>
+  <requires lib="g-script" version="2.0"/>
   <requires lib="gtk+" version="3.0"/>
-  <object class="GScriptJs" id="script">
+  <object class="GScript" id="script">
     <property name="filename">../tests/test-3.js</property>
   </object>
   <object class="GtkWindow" id="window">

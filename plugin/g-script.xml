@@ -1,0 +1,21 @@
+<glade-catalog
+  name="g-script"
+  version="1.0"
+  icon-prefix="js"
+  library="glade-gscript"
+  domain="g"
+  book="gscript">
+  <glade-widget-classes>
+    <glade-widget-class toplevel="True" name="GScript" generic-name="script" title="Script">
+      <create-editor-property-function>glade_g_script_create_eprop</create-editor-property-function>
+      <set-property-function>glade_g_script_set_property</set-property-function>
+      <properties>
+      	<property id="filename" custom-layout="False" title="Source filename"/>
+      	<property id="javascript" custom-layout="False" multiline="True" title="JavaScript code"/>
+      </properties>
+    </glade-widget-class>
+  </glade-widget-classes>
+  <glade-widget-group name="g-script" title="JavaScript Code">
+    <glade-widget-class-ref name="GScript"/>
+  </glade-widget-group>
+</glade-catalog>

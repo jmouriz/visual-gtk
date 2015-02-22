@@ -3,7 +3,7 @@
 #include <cjs/gjs-module.h>
 #include <gi/object.h>
 
-#include <g-script-js.h>
+#include <g-script.h>
 
 static void
 connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar *handler, GObject *connect_object, GConnectFlags flags, gpointer data)
@@ -11,13 +11,13 @@ connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar 
   const gchar *name = (gchar *) data;
   GIRepository *repository;
   gboolean success;
-  GScriptJs *script;
+  GScript *script;
   GClosure *closure;
 
   g_return_if_fail (name != NULL);
   g_return_if_fail (connect_object == NULL); /* TODO */
 
-  script = G_SCRIPT_JS (gtk_builder_get_object (builder, name));
+  script = G_SCRIPT (gtk_builder_get_object (builder, name));
 
   if (!script)
   {
@@ -30,9 +30,9 @@ connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar 
 
   g_irepository_require (repository, "Gtk", NULL, G_IREPOSITORY_LOAD_FLAG_LAZY, NULL);
 
-  g_script_js_set_object (script, "document", G_OBJECT (builder));
+  g_script_set_object (script, "document", G_OBJECT (builder));
 
-  success = g_script_js_evaluate (script);
+  success = g_script_evaluate (script);
 
   if (!success)
   {
@@ -41,7 +41,7 @@ connect (GtkBuilder *builder, GObject *object, const gchar *signal, const gchar 
     return;
   }
 
-  closure = g_script_js_get_closure (script, handler);
+  closure = g_script_get_closure (script, handler);
 
   if (!closure)
   {
