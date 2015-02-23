@@ -17,23 +17,28 @@ TYPELIB=$(NAMESPACE)-$(VERSION).typelib
 all: libgscript.la $(TYPELIB)
 
 libgscript.la: $(OBJECTS)	
-	libtool link $(CC) $(LIBRARIES) $(OBJECTS) -rpath `pwd`/.libs -o $@ 
+	@echo [Linking] $@
+	@libtool link --silent $(CC) $(LIBRARIES) $(OBJECTS) -rpath `pwd`/.libs -o $@ 
 
 $(TYPELIB): $(GIR)
-	g-ir-compiler $(GIR) --output=$(TYPELIB)
+	@echo [Generating] $@
+	@libtool exec --silent g-ir-compiler $(GIR) --output=$(TYPELIB)
 
 $(GIR): g-script.c g-script.h
-	#libtool exec g-ir-scanner $^ --warn-all --library=gscript -L.libs $(INCLUDES) --include=GObject-2.0 --namespace=$(NAMESPACE) --nsversion=$(VERSION) --output=$@
-	libtool exec g-ir-scanner $^ --warn-all --no-libtool --library=gscript -L.lib$(INCLUDES) --include=GObject-2.0 --namespace=$(NAMESPACE) --nsversion=$(VERSION) --output=$@
+	@echo [Scanning] $@
+	@libtool exec --silent g-ir-scanner --quiet --warn-all $^ --no-libtool --library=gscript -L.lib$(INCLUDES) --include=GObject-2.0 --namespace=$(NAMESPACE) --nsversion=$(VERSION) --output=$@
 
 g-script.lo: g-script.c g-script.h g-script-private.h
-	libtool compile $(CC) $(FLAGS) -c $< -o $@
+	@echo [Compiling] $@
+	@libtool compile --silent $(CC) $(FLAGS) -c $< -o $@
 
 g-script-function.lo: g-script-function.c g-script-function.h
-	libtool compile $(CC) $(FLAGS) -c $< -o $@
+	@echo [Compiling] $@
+	@libtool compile --silent $(CC) $(FLAGS) -c $< -o $@
 
 clean:
-	-rm *.o *.lo *.la $(TYPELIB) $(GIR)
-	-rm -rf .libs tmp-introspect*
+	@echo [Cleaning]
+	@-rm *.o *.lo *.la $(TYPELIB) $(GIR)
+	@-rm -rf .libs tmp-introspect*
 
 

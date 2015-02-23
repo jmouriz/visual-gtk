@@ -50,39 +50,32 @@ struct _GScriptClass
 
 GType         g_script_get_type       (void) G_GNUC_CONST;
 
-/**
- * g_script_new: (constructor)
- *
- * TODO
- *
- * Returns: (transfer full): A #GScript.
- */
-GScript      *g_script_new            (void);
+GScript  *g_script_new            (void);
 
-void          g_script_free           (GScript *script);
+void      g_script_free           (GScript *script);
 
-GClosure     *g_script_get_closure    (GScript     *script,
-                                       const gchar *function);
+GClosure *g_script_get_closure    (GScript     *script,
+                                   const gchar *function);
 
-gboolean      g_script_set_filename   (GScript     *script,
-                                       const gchar *filename);
+gboolean  g_script_set_filename   (GScript     *script,
+                                   const gchar *filename);
 
-gboolean      g_script_set_javascript (GScript     *script,
-                                       const gchar *javascript);
+gboolean  g_script_set_javascript (GScript     *script,
+                                   const gchar *javascript);
 
-gchar        *g_script_get_filename   (GScript     *script);
+gchar    *g_script_get_filename   (GScript     *script);
 
-gchar        *g_script_get_javascript (GScript     *script);
+gchar    *g_script_get_javascript (GScript     *script);
 
-GSList       *g_script_get_functions  (GScript     *script);
+GSList   *g_script_get_functions  (GScript     *script);
 
-void          g_script_set_object     (GScript     *script,
-                                       const gchar *name,
-                                       GObject     *object);
+void      g_script_set_object     (GScript     *script,
+                                   const gchar *name,
+                                   GObject     *object);
 
-gboolean      g_script_save           (GScript     *script);
+gboolean  g_script_save           (GScript     *script);
 
-gboolean      g_script_evaluate       (GScript     *script);
+gboolean  g_script_evaluate       (GScript     *script);
 
 G_END_DECLS
 

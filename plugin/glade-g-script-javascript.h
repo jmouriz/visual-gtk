@@ -1,3 +1,8 @@
+#ifndef GLADE_G_SCRIPT_JAVASCRIPT_H
+#define GLADE_G_SCRIPT_JAVASCRIPT_H
+
+G_BEGIN_DECLS
+
 typedef struct
 {
   GladeEditorProperty parent_instance;
@@ -15,3 +20,7 @@ typedef struct
 GType glade_eprop_javascript_get_type (void) G_GNUC_CONST;
 
 void glade_g_script_set_javascript (GObject *object, const GValue *value);
+
+G_END_DECLS
+
+#endif /* GLADE_G_SCRIPT_JAVASCRIPT_H */

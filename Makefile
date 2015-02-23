@@ -5,10 +5,12 @@ SUBDIRS=plugin editor script tests
 subdirs: $(SUBDIRS)
      
 $(SUBDIRS):
-	$(MAKE) -C $@
+	@echo [Subdir] $@
+	@$(MAKE) -C $@
 
 clean:
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
+	@echo [Cleaning]
+	@for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
 
 editor: script
 

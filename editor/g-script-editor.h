@@ -55,10 +55,10 @@ GType            g_script_editor_get_type       (void) G_GNUC_CONST;
 
 GtkWidget       *g_script_editor_new            (void);
 
-void             g_script_editor_free           (GScriptEditor *js);
+void             g_script_editor_free           (GScriptEditor *editor);
 
 gboolean         g_script_editor_set_javascript (GScriptEditor *editor,
-                                                    const gchar *javascript);
+                                                 const gchar   *javascript);
 
 const gchar     *g_script_editor_get_javascript (GScriptEditor *editor);
 

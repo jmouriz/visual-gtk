@@ -8,14 +8,17 @@ SOURCES=g-script-editor.c g-script-editor.h g-script-editor-private.h
 
 all: libgscript-editor.la
 
-libgscript-editor.la: $(OBJECTS)	
-	libtool link $(CC) $(LIBRARIES) $(OBJECTS) -rpath `pwd`/.libs -o $@ 
+libgscript-editor.la: $(OBJECTS)
+	@echo [Linking] $@
+	@libtool link --silent $(CC) $(LIBRARIES) $(OBJECTS) -rpath `pwd`/.libs -o $@ 
 
 g-script-editor.lo: $(SOURCES)
-	libtool compile $(CC) $(FLAGS) -c $< -o $@
+	@echo [Compiling] $@
+	@libtool compile --silent $(CC) $(FLAGS) -c $< -o $@
 
 clean:
-	-rm *.o *.lo *.la
-	-rm -rf .libs
+	@echo [Cleaning]
+	@-rm *.o *.lo *.la
+	@-rm -rf .libs
 
 

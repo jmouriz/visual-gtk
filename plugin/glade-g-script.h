@@ -17,6 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
+#ifndef GLADE_G_SCRIPT_H
+#define GLADE_G_SCRIPT_H
+
 #include <g-script.h>
 
+G_BEGIN_DECLS
+
 // TODO
+
+G_END_DECLS
+
+#endif /* GLADE_G_SCRIPT_H */

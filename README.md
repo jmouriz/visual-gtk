@@ -21,12 +21,6 @@ Christian Hergert <chris@dronelabs.com>
 
 # Usage
 
-## Get source
-
-```shell
-git clone https://github.com/jmouriz/visual-gtk
-```
-
 ## Install dependencies
 
 In Ubuntu 14.10, install (at least) these packages:
@@ -34,24 +28,37 @@ In Ubuntu 14.10, install (at least) these packages:
 * libcjs-dev
 * libgladeui-dev
 * libgtksourceview-3.0-dev
+* libgirepository1.0-dev
 
 ```shell
-$ apt-get install libcjs-dev libgladeui-dev libgtksourceview-3.0-dev
+$ apt-get install libcjs-dev libgladeui-dev libgtksourceview-3.0-dev libgirepository1.0-dev
 ```
 
-(TODO: And GObject Introspection stuff)
-
-## Build all
+## Get source
 
 ```shell
-cd visual-gtk
-make
+git clone https://github.com/jmouriz/visual-gtk
 ```
 
 ## Set the environment
 
 ```shell
+cd visual-gtk
 . set-glade-environment.sh
+```
+
+This will exports:
+
+* LD_LIBRARY_PATH: Search path to shared objects (.so) library.
+* GI_TYPELIB_PATH: Search path to GObject Introspection .typelib file.
+* GLADE_CATALOG_SEARCH_PATH: Search path to Glade Catalog .xml file.
+* GLADE_MODULE_SEARCH_PATH: Search path to Glade Plugin (.so) file.
+* XDG_DATA_DIRS: Search path to Glade Palette Icon.
+
+## Build all
+
+```shell
+make
 ```
 
 And enjoy (test) with Glade, tests and examples.
