@@ -1,9 +1,9 @@
 CC=gcc
-INCLUDES=`pkg-config --cflags gtk+-3.0 cjs-1.0 cjs-internals-1.0`
+INCLUDES=`pkg-config --cflags gtk+-3.0 cjs-1.0 cjs-internals-1.0 gobject-introspection-1.0`
 FLAGS=$(INCLUDES) -Wall -g -ggdb -fPIC
-LIBRARIES=`pkg-config --libs gtk+-3.0 cjs-1.0 cjs-internals-1.0`
+LIBRARIES=`pkg-config --libs gtk+-3.0 cjs-1.0 cjs-internals-1.0 gobject-introspection-1.0`
 
-OBJECTS=g-script.lo g-script-function.lo
+OBJECTS=g-script.lo g-script-function.lo g-script-util.lo
 
 NAMESPACE=G
 VERSION=0.1
@@ -33,6 +33,10 @@ g-script.lo: g-script.c g-script.h g-script-private.h
 	@libtool compile --silent $(CC) $(FLAGS) -c $< -o $@
 
 g-script-function.lo: g-script-function.c g-script-function.h
+	@echo [Compiling] $@
+	@libtool compile --silent $(CC) $(FLAGS) -c $< -o $@
+
+g-script-util.lo: g-script-util.c g-script-util.h
 	@echo [Compiling] $@
 	@libtool compile --silent $(CC) $(FLAGS) -c $< -o $@
 

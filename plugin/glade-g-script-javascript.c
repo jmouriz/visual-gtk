@@ -28,11 +28,12 @@
 
 GLADE_MAKE_EPROP (GladeEPropJavascript, glade_eprop_javascript)
 
+static gboolean loaded = FALSE;
+
 static void
 glade_eprop_javascript_finalize (GObject *object)
 {
-  GObjectClass *parent_class =
-      g_type_class_peek_parent (G_OBJECT_GET_CLASS (object));
+  GObjectClass *parent_class = g_type_class_peek_parent (G_OBJECT_GET_CLASS (object));
 
   /* Chain up */
   G_OBJECT_CLASS (parent_class)->finalize (object);
@@ -49,7 +50,7 @@ glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property
   /* Chain up */
   parent_class->load (eprop, property);
 
-  if (!property)
+  if (!property || loaded)
   {
     return;
   }
@@ -68,6 +69,7 @@ glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property
   if (string) // && strlen (string) > 0)
   {
     g_script_editor_set_javascript (G_SCRIPT_EDITOR (javascript->editor), string);
+    loaded = TRUE;
   }
 }
 
@@ -79,6 +81,7 @@ glade_eprop_javascript_edited (GScriptEditor *editor, const gchar *javascript, g
   g_value_init (&value, G_TYPE_STRING);
   g_value_take_string (&value, (gchar *) javascript);
   
+  g_signal_stop_emission_by_name ((gpointer) editor, "edited");
   glade_editor_property_commit (GLADE_EDITOR_PROPERTY (data), &value);
 }
 
@@ -104,14 +107,10 @@ glade_g_script_set_javascript (GObject *object, const GValue *value)
   //GladeWidget *editor;
   //editor = glade_widget_get_from_gobject (object);
 
-  g_print ("%s (%d) : %s\n", __FILE__, __LINE__, __FUNCTION__);
-
   if (g_value_get_string (value) == NULL)
   {
     return;
   }
-
-  g_print ("%s (%d) : %s (%s)\n", __FILE__, __LINE__, __FUNCTION__, g_value_get_string (value));
 
   g_script_set_javascript (G_SCRIPT (object), g_value_get_string (value));
 }

@@ -20,6 +20,7 @@
 #define G_SCRIPT_H
 
 #include <glib-object.h>
+#include "g-script-util.h"
 
 G_BEGIN_DECLS
 

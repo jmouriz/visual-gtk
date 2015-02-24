@@ -5,6 +5,7 @@
   library="glade-gscript"
   domain="g"
   book="gscript">
+  <init-function>glade_g_script_init</init-function>
   <glade-widget-classes>
     <glade-widget-class toplevel="True" name="GScript" generic-name="script" title="Script">
       <create-editor-property-function>glade_g_script_create_eprop</create-editor-property-function>

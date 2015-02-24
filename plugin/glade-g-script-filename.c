@@ -24,13 +24,10 @@
 
 GLADE_MAKE_EPROP (GladeEPropFilename, glade_eprop_filename)
 
-//static void glade_eprop_filename_changed (GladeEditorProperty *, GladeProperty *, gpointer);
-
 static void
 glade_eprop_filename_finalize (GObject *object)
 {
-  GObjectClass *parent_class =
-      g_type_class_peek_parent (G_OBJECT_GET_CLASS (object));
+  GObjectClass *parent_class = g_type_class_peek_parent (G_OBJECT_GET_CLASS (object));
 
   /* Chain up */
   G_OBJECT_CLASS (parent_class)->finalize (object);

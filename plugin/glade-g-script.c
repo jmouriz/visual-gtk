@@ -37,6 +37,15 @@ empty (GObject * container, GladeCreateReason reason)
 {
 }
 
+/* Initialize needed pspec types from here */
+void
+glade_g_script_init (const gchar *name)
+{
+  g_print ("Initializing %s\n", name);
+  gtk_init (NULL, NULL);
+  g_script_module_init ();
+}
+
 void
 glade_g_script_set_property (GladeWidgetAdaptor *adaptor, GObject *object, const gchar *id, const GValue *value)
 {

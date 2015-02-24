@@ -9,14 +9,7 @@ function onClicked(widget, data)
   window.title = "It's works";
 }
 
-function backdoorQuit()
-{
-  print("backdoor");
-
-  module.quit();
-}
-
 function onQuit()
 {
-  module.quit();
+  module.quit(); // document.quit();
 }

@@ -51,9 +51,10 @@ This will exports:
 
 * LD_LIBRARY_PATH: Search path to shared objects (.so) library.
 * GI_TYPELIB_PATH: Search path to GObject Introspection .typelib file.
-* GLADE_CATALOG_SEARCH_PATH: Search path to Glade Catalog .xml file.
-* GLADE_MODULE_SEARCH_PATH: Search path to Glade Plugin (.so) file.
-* XDG_DATA_DIRS: Search path to Glade Palette Icon.
+* GLADE_CATALOG_SEARCH_PATH: Search path to Glade catalog .xml file.
+* GLADE_MODULE_SEARCH_PATH: Search path to Glade plugin (.so) file.
+* XDG_DATA_DIRS: Search path to Glade palette icon.
+* GSCRIPT_MODULE_SEARCH_PATH: Search path for GScript internal modules (.js).
 
 ## Build all
 

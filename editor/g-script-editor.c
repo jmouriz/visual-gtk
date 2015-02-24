@@ -140,6 +140,20 @@ g_script_editor_init (GScriptEditor *editor)
   editor->priv->buffer =  gtk_source_buffer_new_with_language (language);
 }
 
+static void
+configure (GtkSourceView *editor)
+{
+  gtk_source_view_set_show_line_numbers (editor, TRUE);
+  gtk_source_view_set_show_line_marks (editor, TRUE);
+  gtk_source_view_set_highlight_current_line (editor, TRUE);
+  gtk_source_view_set_tab_width (editor, 8);
+  gtk_source_view_set_auto_indent (editor, TRUE);
+  gtk_source_view_set_insert_spaces_instead_of_tabs (editor, TRUE);
+  gtk_source_view_set_show_right_margin (editor, TRUE);
+  gtk_source_view_set_right_margin_position (editor, 80);
+  //gtk_source_view_set_smart_home_end (editor, TRUE);
+}
+
 /*
  * TODO
  */
@@ -184,16 +198,8 @@ g_script_editor_new (void)
   gtk_source_buffer_set_highlight_syntax (data->priv->buffer, TRUE);
   gtk_source_buffer_set_highlight_matching_brackets (data->priv->buffer, TRUE);
 
-  gtk_source_view_set_show_line_numbers (GTK_SOURCE_VIEW (data->editor), TRUE);
-  gtk_source_view_set_show_line_marks (GTK_SOURCE_VIEW (data->editor), TRUE);
-  gtk_source_view_set_highlight_current_line (GTK_SOURCE_VIEW (data->editor), TRUE);
-  gtk_source_view_set_tab_width (GTK_SOURCE_VIEW (data->editor), 8);
-  gtk_source_view_set_auto_indent (GTK_SOURCE_VIEW (data->editor), TRUE);
-  gtk_source_view_set_insert_spaces_instead_of_tabs (GTK_SOURCE_VIEW (data->editor), TRUE);
-  gtk_source_view_set_show_right_margin (GTK_SOURCE_VIEW (data->editor), TRUE);
-  gtk_source_view_set_right_margin_position (GTK_SOURCE_VIEW (data->editor), 80);
-  //gtk_source_view_set_smart_home_end (GTK_SOURCE_VIEW (data->editor), TRUE);
-  
+  configure (GTK_SOURCE_VIEW (data->editor));
+
   gtk_box_pack_start (GTK_BOX (box), data->combo, FALSE, FALSE, 0);
   gtk_container_add (GTK_CONTAINER (area), data->editor);
   gtk_box_pack_start (GTK_BOX (box), area, TRUE, TRUE, 0);
@@ -253,12 +259,12 @@ modified (GtkTextBuffer *buffer, gpointer data)
   GtkTextIter start;
   GtkTextIter end;
   GScriptEditorPrivate *priv;
-  gboolean modified;
+  gboolean changed;
   gchar *javascript;
 
-  modified = gtk_text_buffer_get_modified (buffer);
+  changed = gtk_text_buffer_get_modified (buffer);
 
-  if (!modified)
+  if (!changed)
   {
     return;
   }
@@ -280,7 +286,7 @@ modified (GtkTextBuffer *buffer, gpointer data)
   //gtk_combo_box_set_active (GTK_COMBO_BOX (combo), 0);
   move (GTK_TEXT_VIEW (editor), GTK_MOVEMENT_DISPLAY_LINES, 0, FALSE, combo);
 
-  g_signal_emit (self, signals[EDITED_SIGNAL_HANDLER], 0, javascript);
+  g_signal_emit ((gpointer) self, signals[EDITED_SIGNAL_HANDLER], 0, (const gchar *) javascript);
 
   g_free (javascript);
 
@@ -448,7 +454,6 @@ static void
 g_script_editor_set_property (GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec)
 {
   GScriptEditor *editor = G_SCRIPT_EDITOR (object);
-  GScriptEditorPrivate *priv = editor->priv;
 
   switch (prop_id)
   {
@@ -458,7 +463,7 @@ g_script_editor_set_property (GObject *object, guint prop_id, const GValue *valu
   
       if (javascript)
       {
-        g_script_set_javascript (priv->script, javascript);
+        g_script_editor_set_javascript (editor, javascript);
       }
       break;
     }

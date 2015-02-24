@@ -23,12 +23,11 @@
 #include <gi/closure.h>
 #include <gi/value.h>
 #include <glib/gi18n.h>
-#include <gtk/gtk.h>
 
 #include "g-script.h"
 #include "g-script-function.h"
 
-#define MODULES "../modules"
+#define MODULES "/usr/share/gscript/modules"
 
 #define G_SCRIPT_TYPE G_TYPE_SCRIPT
 #define IS_G_SCRIPT   G_IS_SCRIPT
@@ -526,8 +525,6 @@ g_script_set_object (GScript *script, const gchar *name, GObject *object)
   instance = gjs_object_from_g_object (context, object);
   value = OBJECT_TO_JSVAL (instance);
 
-  g_print ("%s %d %s\n", __FILE__, __LINE__, __FUNCTION__);
-
   //ok = JS_DefineProperty (context, global, name, value, JS_PropertyStub, JS_StrictPropertyStub,
   //                        GJS_MODULE_PROP_FLAGS | JSPROP_READONLY);
   ok = JS_DefineProperty (context, global, name, value, NULL, NULL,
@@ -585,16 +582,22 @@ g_script_introspect_functions (GScript *script)
   glong length;
   GScriptPrivate *priv;
 
-  const gchar *path = MODULES;
+  const gchar *path = g_getenv ("GSCRIPT_MODULE_SEARCH_PATH");
+
+  if (!path)
+  {
+    path = MODULES;
+  }
 
   /* javascript reflection code to parse script */
-  const gchar *javascript = "imports.searchPath.unshift(p);var m=imports.parser;function i(n){return "
-                            "n.id.name+':'+n.loc.start.line+':'+n.loc.start.column+':'+n.loc.end.line"
-                            "+':'+n.loc.end.column}var r=m.parse(c,{loc:true});var s='';for(var eleme"
-                            "nt in r.body){var n=r.body[element];if(n.type=='VariableDeclaration')for"
-                            "(element in n.declarations){var d=n.declarations[element];if(d.init.type"
-                            "=='FunctionExpression')s+=i(d)+'|'}else if(n.type=='FunctionDeclaration'"
-                            ")s+=i(n)+'|'}";
+  const gchar *javascript = "var a=p.split(':');for(var j in a){imports.searchPath.unshift("
+                            "a[j])}var m=imports.parser;function i(n){return n.id.name+':'+"
+                            "n.loc.start.line+':'+n.loc.start.column+':'+n.loc.end.line+':'"
+                            "+n.loc.end.column}var r=m.parse(c,{loc:true});var s='';for(var"
+                            " e in r.body){var n=r.body[e];if(n.type=='VariableDeclaration'"
+                            ")for(e in n.declarations){var d=n.declarations[e];if(d.init.ty"
+                            "pe=='FunctionExpression')s+=i(d)+'|'}else if(n.type=='Function"
+                            "Declaration')s+=i(n)+'|'}";
 
   priv = script->priv;
 
