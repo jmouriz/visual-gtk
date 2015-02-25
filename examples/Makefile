@@ -1,4 +1,4 @@
-SUBDIRS=editor
+SUBDIRS=editor crud
 
 .PHONY: subdirs $(SUBDIRS)
      
