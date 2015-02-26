@@ -13,7 +13,7 @@
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox" id="dialog-action_area">
+          <object class="GtkButtonBox" id="dialog-action-area">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
             <child>
@@ -152,7 +152,10 @@
                 </child>
                 <child>
                   <object class="GtkTreeViewColumn" id="treeviewcolumn-name">
+                    <property name="resizable">True</property>
                     <property name="title" translatable="yes">Name</property>
+                    <property name="sort_indicator">True</property>
+                    <property name="sort_order">descending</property>
                     <property name="sort_column_id">0</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderer-name"/>
@@ -164,8 +167,9 @@
                 </child>
                 <child>
                   <object class="GtkTreeViewColumn" id="treeviewcolumn-phone">
+                    <property name="resizable">True</property>
+                    <property name="sizing">autosize</property>
                     <property name="title" translatable="yes">Phone</property>
-                    <property name="sort_column_id">1</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderer-phone"/>
                       <attributes>
@@ -399,8 +403,7 @@ function onSave() {
     connection.execute_non_select_command ("update demo set name = '" + name + "', phone = '" + phone + "' where id = " + id);
   } else {
     connection.execute_non_select_command ("insert into demo (name, phone) values ('" + name + "', '" + phone + "')");
-    var data = connection.execute_select_command ("select id from demo where name = '" + name + "' and phone = '" + phone + "'");
-    iter.move_next ();
+    var data = connection.execute_select_command ("select  last_insert_rowid()");
     var id = Gda.value_stringify (data.get_value_at(0, 0));
     append([name, phone, id]);
   }
