@@ -328,12 +328,16 @@ g_script_evaluate (GScript *script)
   gboolean success;
   gchar *javascript;
   glong length;
-  const gchar *include = "var Gtk = imports.gi.Gtk;\n";
+
+  const gchar *common = "imports.searchPath.unshift('.');var Gtk=imports.gi.Gtk;"
+                        "function quit(){Gtk.main_quit()}function alert(m){let d"
+                        "=new Gtk.MessageDialog();d.add_button('Close',0);d.set_"
+                        "markup(m);d.run();d.destroy()}";
 
   g_return_val_if_fail (IS_G_SCRIPT (script), FALSE);
 
   error = NULL;
-  javascript = g_strconcat (include, script->priv->javascript, NULL);
+  javascript = g_strconcat (common, script->priv->javascript, NULL);
   length  = g_utf8_strlen (javascript, G_MAXLONG);
 
   success = gjs_context_eval (script->priv->context, javascript, length, "__gtk_builder__", NULL, &error);

@@ -1,5 +1,3 @@
-imports.searchPath.unshift('.'); 
-
 var module = imports.module;
 
 function onClicked(widget, data)
@@ -12,7 +10,7 @@ function onClicked(widget, data)
   button.set_label("View GTK+ version");
   button.connect("clicked", function()
   {
-    module.alert("GTK+ " + module.version())
+    alert("GTK+ " + module.version())
   });
 
   label.set_text("You clicked on '" + widget.get_label() + "'");
@@ -24,9 +22,4 @@ function onClicked(widget, data)
 
   dialog.run();
   dialog.destroy();
-}
-
-function onQuit()
-{
-  module.quit();
 }

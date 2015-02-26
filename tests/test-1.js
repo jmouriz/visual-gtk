@@ -1,12 +1,3 @@
-function alert(message)
-{
-  let d = new Gtk.MessageDialog();
-  d.add_button("Close", 0);
-  d.set_markup(message);
-  d.run();
-  d.destroy();
-}
-
 var get_version = function()
 {
   return Gtk.MAJOR_VERSION + '.' + Gtk.MINOR_VERSION + '.' + Gtk.MICRO_VERSION
@@ -38,5 +29,5 @@ function onClicked(widget, data)
 
 function onQuit()
 {
-  Gtk.main_quit();
+  quit();
 }

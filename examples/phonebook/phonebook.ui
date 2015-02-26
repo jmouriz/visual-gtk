@@ -308,23 +308,23 @@
 var provider = Gda.Config.get_provider("SQLite");
 var cnc = "DB_DIR=.;DB_NAME=phonebook";
 
-var connection = new Gda.Connection ({ provider: provider, cnc_string: cnc });
+var connection = new Gda.Connection({provider: provider, cnc_string: cnc});
 var store = document.get_object("liststore");
 var dialog = document.get_object("dialog");
 var messagedialog = document.get_object("messagedialog");
 var action = null;
 
-connection.open ();
+connection.open();
 
 /* Query DB */
-var data = connection.execute_select_command ("select id, name, phone from phonebook order by name");
-var iter = data.create_iter ();
+var data = select("select id, name, phone from phonebook order by name");
+var iter = data.create_iter();
 
 /* Fill the store */
-while (iter.move_next ()) {
-  var id = Gda.value_stringify (iter.get_value_at (0));
-  var name = Gda.value_stringify (iter.get_value_at (1));
-  var phone = Gda.value_stringify (iter.get_value_at (2));
+while (iter.move_next()) {
+  var id = Gda.value_stringify (iter.get_value_at(0));
+  var name = Gda.value_stringify (iter.get_value_at(1));
+  var phone = Gda.value_stringify (iter.get_value_at(2));
 
   append([name, phone, id]);
 }
@@ -343,10 +343,18 @@ function append(record) {
   set(store.append(), record);
 }
 
+function select(command) {
+  return connection.execute_select_command(command);
+}
+
+function query(command) {
+  connection.execute_non_select_command(command);
+}
+
 /* Callbacks */
 function onQuit() {
-  connection.close ();
-  Gtk.main_quit()
+  connection.close();
+  quit()
 }
 
 function onNew() {
@@ -399,11 +407,11 @@ function onSave() {
   if (action == 'edit') {
     var id = store.get_value(selected, 2);
     set(selected, [name, phone, id]);
-    connection.execute_non_select_command ("update phonebook set name = '" + name + "', phone = '" + phone + "' where id = " + id);
+    query("update phonebook set name = '" + name + "', phone = '" + phone + "' where id = " + id);
   } else {
-    connection.execute_non_select_command ("insert into phonebook (name, phone) values ('" + name + "', '" + phone + "')");
-    var data = connection.execute_select_command ("select  last_insert_rowid()");
-    var id = Gda.value_stringify (data.get_value_at(0, 0));
+    query("insert into phonebook (name, phone) values ('" + name + "', '" + phone + "')");
+    var data = select("select  last_insert_rowid()");
+    var id = Gda.value_stringify(data.get_value_at(0, 0));
     append([name, phone, id]);
   }
 }
@@ -415,7 +423,7 @@ function onYes() {
   var id = store.get_value(selected, 2);
 
   store.remove(selected);
-  connection.execute_non_select_command ("delete from phonebook where id = " + id);
+  query("delete from phonebook where id = " + id);
 }
 
 function onCancel() {

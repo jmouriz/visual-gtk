@@ -9,17 +9,6 @@
   return Gtk.MAJOR_VERSION + '.' + Gtk.MINOR_VERSION + '.' + Gtk.MICRO_VERSION
 }
 
-function alert(message)
-{
-  let d = new Gtk.MessageDialog();
-  d.add_button("Close", 0);
-  d.set_markup(message);
-  d.run();
-  d.destroy();
-}
-
-function onQuit() { Gtk.main_quit() }
-
 function onClicked(widget, data)
 {
   let d = new Gtk.Dialog();
@@ -40,7 +29,7 @@ function onClicked(widget, data)
     <property name="can_focus">False</property>
     <property name="default_width">640</property>
     <property name="default_height">480</property>
-    <signal name="delete-event" handler="onQuit" swapped="no"/>
+    <signal name="delete-event" handler="quit" swapped="no"/>
     <child>
       <object class="GtkBox" id="box">
         <property name="visible">True</property>
