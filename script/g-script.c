@@ -326,14 +326,19 @@ g_script_evaluate (GScript *script)
 {
   GError *error;
   gboolean success;
+  gchar *javascript;
   glong length;
+  const gchar *include = "var Gtk = imports.gi.Gtk;\n";
 
   g_return_val_if_fail (IS_G_SCRIPT (script), FALSE);
 
   error = NULL;
-  length = g_utf8_strlen (script->priv->javascript, G_MAXLONG);
+  javascript = g_strconcat (include, script->priv->javascript, NULL);
+  length  = g_utf8_strlen (javascript, G_MAXLONG);
 
-  success = gjs_context_eval (script->priv->context, script->priv->javascript, length, "__gtk_builder__", NULL, &error);
+  success = gjs_context_eval (script->priv->context, javascript, length, "__gtk_builder__", NULL, &error);
+
+  g_free (javascript);
 
   if (!success)
   {

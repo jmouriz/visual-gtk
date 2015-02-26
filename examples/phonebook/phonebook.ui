@@ -303,11 +303,10 @@
     </child>
   </object>
   <object class="GScript" id="script">
-    <property name="javascript">var Gtk = imports.gi.Gtk;
-var Gda = imports.gi.Gda;
+    <property name="javascript">var Gda = imports.gi.Gda;
 
 var provider = Gda.Config.get_provider("SQLite");
-var cnc = "DB_DIR=.;DB_NAME=demo";
+var cnc = "DB_DIR=.;DB_NAME=phonebook";
 
 var connection = new Gda.Connection ({ provider: provider, cnc_string: cnc });
 var store = document.get_object("liststore");
@@ -318,7 +317,7 @@ var action = null;
 connection.open ();
 
 /* Query DB */
-var data = connection.execute_select_command ("select id, name, phone from demo order by name");
+var data = connection.execute_select_command ("select id, name, phone from phonebook order by name");
 var iter = data.create_iter ();
 
 /* Fill the store */
@@ -400,9 +399,9 @@ function onSave() {
   if (action == 'edit') {
     var id = store.get_value(selected, 2);
     set(selected, [name, phone, id]);
-    connection.execute_non_select_command ("update demo set name = '" + name + "', phone = '" + phone + "' where id = " + id);
+    connection.execute_non_select_command ("update phonebook set name = '" + name + "', phone = '" + phone + "' where id = " + id);
   } else {
-    connection.execute_non_select_command ("insert into demo (name, phone) values ('" + name + "', '" + phone + "')");
+    connection.execute_non_select_command ("insert into phonebook (name, phone) values ('" + name + "', '" + phone + "')");
     var data = connection.execute_select_command ("select  last_insert_rowid()");
     var id = Gda.value_stringify (data.get_value_at(0, 0));
     append([name, phone, id]);
@@ -416,7 +415,7 @@ function onYes() {
   var id = store.get_value(selected, 2);
 
   store.remove(selected);
-  connection.execute_non_select_command ("delete from demo where id = " + id);
+  connection.execute_non_select_command ("delete from phonebook where id = " + id);
 }
 
 function onCancel() {

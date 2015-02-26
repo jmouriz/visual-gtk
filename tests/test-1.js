@@ -1,5 +1,3 @@
-var Gtk = imports.gi.Gtk;
-
 function alert(message)
 {
   let d = new Gtk.MessageDialog();

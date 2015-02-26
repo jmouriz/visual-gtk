@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
+<interface>
+  <requires lib="g-script" version="1.0"/>
+  <requires lib="gtk+" version="3.12"/>
+  <object class="GScript" id="script">
+    <property name="javascript">var Gst = imports.gi.Gst;
+var Mainloop = imports.mainloop;
+
+Gst.init(null, null);
+
+var frequencies = {E: 329.63, A: 440,  D: 587.33,  G: 783.99,  B: 987.77,  e: 1318.5}
+
+function play(frequency) {
+  var pipeline = new Gst.Pipeline({name: "note"});
+  var source = new Gst.ElementFactory.make("audiotestsrc", "source");
+  var sink = new Gst.ElementFactory.make("autoaudiosink", "output");
+
+  source.set_property('freq', frequency);
+  pipeline.add(source);
+  pipeline.add(sink);
+  source.link(sink);
+  pipeline.set_state(Gst.State.PLAYING);
+
+  Mainloop.timeout_add(500, function () {
+    pipeline.set_state(Gst.State.NULL);
+    return false;
+  });
+}
+
+function onClicked(button) {
+  var frequency = button.get_label();
+  play(frequencies[frequency]);
+}
+
+function onQuit() {
+  Gtk.main_quit();
+}</property>
+  </object>
+  <object class="GtkWindow" id="window">
+    <property name="can_focus">False</property>
+    <property name="border_width">6</property>
+    <property name="title" translatable="yes">Guitar tuner</property>
+    <signal name="delete-event" handler="onQuit" swapped="no"/>
+    <child>
+      <object class="GtkButtonBox" id="buttonbox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">3</property>
+        <property name="layout_style">start</property>
+        <child>
+          <object class="GtkButton" id="button-E">
+            <property name="label" translatable="yes">E</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="onClicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button-A">
+            <property name="label" translatable="yes">A</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="onClicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button-D">
+            <property name="label" translatable="yes">D</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="onClicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button-G">
+            <property name="label" translatable="yes">G</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="onClicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button-B">
+            <property name="label" translatable="yes">B</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="onClicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="button-e">
+            <property name="label" translatable="yes">e</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <signal name="clicked" handler="onClicked" swapped="no"/>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">5</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

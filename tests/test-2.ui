@@ -4,9 +4,7 @@
   <requires lib="g-script" version="1.0"/>
   <requires lib="gtk+" version="3.0"/>
   <object class="GScript" id="script">
-    <property name="javascript">var Gtk = imports.gi.Gtk;
-
-var version = function()
+    <property name="javascript">var version = function()
 {
   return Gtk.MAJOR_VERSION + '.' + Gtk.MINOR_VERSION + '.' + Gtk.MICRO_VERSION
 }

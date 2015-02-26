@@ -1,9 +1,9 @@
-TARGET=editor
+TARGET=viewer
 
 CC=gcc
-INCLUDES=`pkg-config --cflags gtk+-3.0` -I../../script -I../../editor
+INCLUDES=`pkg-config --cflags gtk+-3.0` -I../../script
 FLAGS=$(INCLUDES) -Wall -g -ggdb -fPIC
-LIBRARIES=`pkg-config --libs gtk+-3.0` -L../../script/.libs -L../../editor/.libs -lgscript -lgscript-editor
+LIBRARIES=`pkg-config --libs gtk+-3.0` -L../../script/.libs -lgscript
 
 all: $(TARGET)
 

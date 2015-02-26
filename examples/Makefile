@@ -1,4 +1,4 @@
-SUBDIRS=editor crud
+SUBDIRS=editor phonebook tuner viewer
 
 .PHONY: subdirs $(SUBDIRS)
      

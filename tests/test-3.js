@@ -1,7 +1,6 @@
 imports.searchPath.unshift('.'); 
 
 var module = imports.module;
-var Gtk = imports.gi.Gtk;
 
 function onClicked(widget, data)
 {
