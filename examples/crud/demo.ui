@@ -118,6 +118,8 @@
       <column type="gchararray"/>
       <!-- column-name Phone -->
       <column type="gchararray"/>
+      <!-- column-name Id -->
+      <column type="gchararray"/>
     </columns>
   </object>
   <object class="GtkWindow" id="window">
@@ -143,12 +145,15 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="model">liststore</property>
+                <property name="rules_hint">True</property>
+                <property name="search_column">0</property>
                 <child internal-child="selection">
                   <object class="GtkTreeSelection" id="treeview-selection"/>
                 </child>
                 <child>
                   <object class="GtkTreeViewColumn" id="treeviewcolumn-name">
                     <property name="title" translatable="yes">Name</property>
+                    <property name="sort_column_id">0</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderer-name"/>
                       <attributes>
@@ -160,6 +165,7 @@
                 <child>
                   <object class="GtkTreeViewColumn" id="treeviewcolumn-phone">
                     <property name="title" translatable="yes">Phone</property>
+                    <property name="sort_column_id">1</property>
                     <child>
                       <object class="GtkCellRendererText" id="cellrenderer-phone"/>
                       <attributes>
@@ -303,29 +309,35 @@ var connection = new Gda.Connection ({ provider: provider, cnc_string: cnc });
 var store = document.get_object("liststore");
 var dialog = document.get_object("dialog");
 var messagedialog = document.get_object("messagedialog");
+var action = null;
 
 connection.open ();
 
 /* Query DB */
-var data = connection.execute_select_command ("select * from demo order by 1");
+var data = connection.execute_select_command ("select id, name, phone from demo order by name");
 var iter = data.create_iter ();
 
 /* Fill the store */
 while (iter.move_next ()) {
-  var name = Gda.value_stringify (iter.get_value_at (0));
-  var phone = Gda.value_stringify (iter.get_value_at (1));
+  var id = Gda.value_stringify (iter.get_value_at (0));
+  var name = Gda.value_stringify (iter.get_value_at (1));
+  var phone = Gda.value_stringify (iter.get_value_at (2));
 
-  append(store, [name, phone]);
+  append([name, phone, id]);
 }
 
-function append(store, record) {
-  store.set(store.append(), [0, 1], record);
+function set(iter, record) {
+  store.set(iter, [0, 1, 2], record);
 }
 
-function get_selected() {
+function get() {
   var selection = document.get_object("treeview-selection");
-  var [ selected, model, iter ] = selection.get_selected();
+  var [selected, model, iter] = selection.get_selected();
   return iter;
+}
+
+function append(record) {
+  set(store.append(), record);
 }
 
 /* Callbacks */
@@ -335,14 +347,28 @@ function onQuit() {
 }
 
 function onNew() {
+  action = 'new';
+
+  dialog.title = "Append record";
+
+  var entry_name = document.get_object("entry-name");
+  var entry_phone = document.get_object("entry-phone");
+
+  entry_name.set_text("");
+  entry_phone.set_text("");
+
   dialog.run();
   dialog.hide();
 }
 
 function onEdit() {
+  action = 'edit';
+
+  dialog.title = "Edit record";
+
   var entry_name = document.get_object("entry-name");
   var entry_phone = document.get_object("entry-phone");
-  var selected = get_selected();
+  var selected = get();
   var name = store.get_value(selected, 0);
   var phone = store.get_value(selected, 1);
 
@@ -359,17 +385,39 @@ function onDelete() {
 }
 
 function onSave() {
-  print("save");
   dialog.hide();
+
+  var entry_name = document.get_object("entry-name");
+  var entry_phone = document.get_object("entry-phone");
+  var name = entry_name.get_text();
+  var phone = entry_phone.get_text();
+  var selected = get();
+
+  if (action == 'edit') {
+    var id = store.get_value(selected, 2);
+    set(selected, [name, phone, id]);
+    connection.execute_non_select_command ("update demo set name = '" + name + "', phone = '" + phone + "' where id = " + id);
+  } else {
+    connection.execute_non_select_command ("insert into demo (name, phone) values ('" + name + "', '" + phone + "')");
+    var data = connection.execute_select_command ("select id from demo where name = '" + name + "' and phone = '" + phone + "'");
+    iter.move_next ();
+    var id = Gda.value_stringify (data.get_value_at(0, 0));
+    append([name, phone, id]);
+  }
+}
+
+function onYes() {
+  messagedialog.hide();
+
+  var selected = get();
+  var id = store.get_value(selected, 2);
+
+  store.remove(selected);
+  connection.execute_non_select_command ("delete from demo where id = " + id);
 }
 
 function onCancel() {
   dialog.hide();
-}
-
-function onYes() {
-  print("delete");
-  messagedialog.hide();
 }
 
 function onNo() {

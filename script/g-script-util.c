@@ -20,6 +20,8 @@
 
 #include "g-script.h"
 
+static gboolean evaluated = FALSE;
+
 static GScript *
 find_script (GtkBuilder *builder)
 {
@@ -70,13 +72,18 @@ connect_signal (GtkBuilder *builder, GObject *object, const gchar *signal, const
 
   g_script_set_object (script, "document", G_OBJECT (builder));
 
-  success = g_script_evaluate (script);
-
-  if (!success)
+  if (!evaluated)
   {
-    g_critical ("Error evaluating script for %s", handler);
+    success = g_script_evaluate (script);
 
-    return;
+    evaluated = TRUE;
+
+    if (!success)
+    {
+      g_critical ("Error evaluating script for %s", handler);
+
+      return;
+    }
   }
 
   closure = g_script_get_closure (script, handler);
