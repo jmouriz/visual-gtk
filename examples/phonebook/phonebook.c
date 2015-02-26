@@ -7,7 +7,7 @@ main (int argc, gchar *argv[])
   gtk_init (&argc, &argv);
   g_script_module_init ();
 
-  GtkBuilder *builder = gtk_builder_new_from_file("demo.ui");
+  GtkBuilder *builder = gtk_builder_new_from_file("phonebook.ui");
   g_script_util_connect (builder);
 
   GtkWindow *window = GTK_WINDOW (gtk_builder_get_object (builder, "window"));

@@ -31,7 +31,7 @@ main (int argc, char *argv[])
 
   if (1)
   {
-    g_script_set_filename (script, "script.js");
+    g_script_set_filename (script, "test.js");
   }
 
   javascript = g_strdup (g_script_get_javascript (script));
