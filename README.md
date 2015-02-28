@@ -25,10 +25,10 @@ Christian Hergert <chris@dronelabs.com>
 
 In Ubuntu 14.10, install (at least) these packages:
 
-* libcjs-dev
-* libgladeui-dev
-* libgtksourceview-3.0-dev
-* libgirepository1.0-dev
+* libcjs-dev (required)
+* libgirepository1.0-dev (required)
+* libgladeui-dev (for Glade plugin)
+* libgtksourceview-3.0-dev (for editor, also required by Glade plugin)
 * gir1.2-gstreamer-1.0 (for guitar tuner example)
 * gir1.2-gda-5.0 (for phonebook example)
 
