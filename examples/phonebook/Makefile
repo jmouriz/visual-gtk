@@ -5,15 +5,7 @@ INCLUDES=`pkg-config --cflags gtk+-3.0` -I../../script
 FLAGS=$(INCLUDES) -Wall -g -ggdb -fPIC
 LIBRARIES=`pkg-config --libs gtk+-3.0` -L../../script/.libs -lgscript
 
-all: $(TARGET) $(TARGET).db
-
-$(TARGET): $(TARGET).o
-	@echo [Linking] $@
-	@$(CC) $< $(LIBRARIES) -o $@ 
-
-$(TARGET).o: $(TARGET).c
-	@echo [Compiling] $@
-	@$(CC) $(FLAGS) -c $< -o $@
+all: $(TARGET).db
 
 $(TARGET).db: $(TARGET).sql
 	@echo [Generating] $@
@@ -21,4 +13,4 @@ $(TARGET).db: $(TARGET).sql
 
 clean:
 	@echo [Cleaning]
-	@-rm *.o *.ui~ $(TARGET).db $(TARGET)
+	@-rm *.o *.ui~ $(TARGET).db

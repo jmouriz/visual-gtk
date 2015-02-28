@@ -49,6 +49,7 @@ cd visual-gtk
 
 This will exports:
 
+* PATH: Search path to binary application.
 * LD_LIBRARY_PATH: Search path to shared objects (.so) library.
 * GI_TYPELIB_PATH: Search path to GObject Introspection .typelib file.
 * GLADE_CATALOG_SEARCH_PATH: Search path to Glade catalog .xml file.
@@ -60,6 +61,15 @@ This will exports:
 
 ```shell
 make
+```
+
+## Run examples
+
+```shell
+g-script examples/calculator/calculator.ui
+g-script examples/phonebook/phonebook.ui
+g-script examples/tuner/tuner.ui
+g-script examples/viewer/viewer.ui
 ```
 
 And enjoy (test) with Glade, tests and examples.

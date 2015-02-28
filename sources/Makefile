@@ -1,9 +1,9 @@
-TARGET=calculator
+TARGET=g-script
 
 CC=gcc
-INCLUDES=`pkg-config --cflags gtk+-3.0` -I../../script
+INCLUDES=`pkg-config --cflags gtk+-3.0` -I../script
 FLAGS=$(INCLUDES) -Wall -g -ggdb -fPIC
-LIBRARIES=`pkg-config --libs gtk+-3.0` -L../../script/.libs -lgscript
+LIBRARIES=`pkg-config --libs gtk+-3.0` -L../script/.libs -lgscript
 
 all: $(TARGET)
 
@@ -17,4 +17,4 @@ $(TARGET).o: $(TARGET).c
 
 clean:
 	@echo [Cleaning]
-	@-rm *.o *.ui~ $(TARGET)
+	@-rm *.o $(TARGET)

@@ -1,4 +1,4 @@
-SUBDIRS=calculator phonebook tuner viewer editor
+SUBDIRS=editor phonebook
 
 .PHONY: subdirs $(SUBDIRS)
      

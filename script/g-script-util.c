@@ -31,6 +31,7 @@ find_script (GtkBuilder *builder)
   script = NULL;
   objects = gtk_builder_get_objects (builder);
 
+  // TODO use for and break to walk list, not nested function
   void get_script (gpointer node, gpointer data)
   {
     if (G_IS_SCRIPT (node))

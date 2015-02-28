@@ -1,4 +1,4 @@
-SUBDIRS=examples plugin editor script tests
+SUBDIRS=examples plugin editor script tests sources
 
 .PHONY: subdirs $(SUBDIRS)
      
@@ -12,10 +12,12 @@ clean:
 	@echo [Cleaning]
 	@for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
 
-examples: editor
-
-editor: script
+examples: editor sources
 
 plugin: editor
+
+sources: script
+
+editor: script
 
 tests: script
