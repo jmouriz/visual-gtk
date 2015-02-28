@@ -65,11 +65,15 @@ make
 
 ## Run examples
 
+### Calculator
+
 `g-script` [`examples/calculator/calculator.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/calculator/calculator.ui)
 
 [[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/calculator/calculator.ui)]
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/calculator.png "Screenshot")
+
+### Phone book
 
 `g-script` [`examples/phonebook/phonebook.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/phonebook/phonebook.ui)
 
@@ -77,15 +81,19 @@ make
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/phonebook.png "Screenshot")
 
-`g-script` [`examples/tuner/tuner.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/phonebook/phonebook.ui)
+### Guitar tuner
 
-[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/phonebook/phonebook.ui)]
+`g-script` [`examples/tuner/tuner.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/tuner/tuner.ui)
+
+[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/tuner/tuner.ui)]
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/tuner.png "Screenshot")
 
-`g-script` [`examples/viewer/viewer.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/phonebook/phonebook.ui)
+### Image viewer
 
-[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/phonebook/phonebook.ui)]
+`g-script` [`examples/viewer/viewer.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/viewer/viewer.ui)
+
+[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/viewer/viewer.ui)]
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/viewer.png "Screenshot")
 
