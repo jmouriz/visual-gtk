@@ -65,9 +65,7 @@ make
 
 ## Run examples
 
-```shell
-g-script [examples/calculator/calculator.ui](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/calculator/calculator.ui)
-```
+`g-script` [`examples/calculator/calculator.ui`](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/calculator/calculator.ui)
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/calculator.png "Screenshot")
 
