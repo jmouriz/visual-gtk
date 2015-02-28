@@ -29,10 +29,14 @@ In Ubuntu 14.10, install (at least) these packages:
 * libgladeui-dev
 * libgtksourceview-3.0-dev
 * libgirepository1.0-dev
+* gir1.2-gstreamer-1.0 (for guitar tuner example)
+* gir1.2-gda-5.0 (for phonebook example)
 
 ```shell
-$ apt-get install libcjs-dev libgladeui-dev libgtksourceview-3.0-dev libgirepository1.0-dev
+$ apt-get install libcjs-dev libgladeui-dev libgtksourceview-3.0-dev libgirepository1.0-dev gir1.2-gda-5.0 gir1.2-gstreamer-1.0
 ```
+
+And, of course, a C compiler, make and pkg-config utilities and you probably want Glade too!
 
 ## Get source
 
@@ -49,13 +53,13 @@ cd visual-gtk
 
 This will exports:
 
-* PATH: Search path to binary application.
-* LD_LIBRARY_PATH: Search path to shared objects (.so) library.
-* GI_TYPELIB_PATH: Search path to GObject Introspection .typelib file.
-* GLADE_CATALOG_SEARCH_PATH: Search path to Glade catalog .xml file.
-* GLADE_MODULE_SEARCH_PATH: Search path to Glade plugin (.so) file.
-* XDG_DATA_DIRS: Search path to Glade palette icon.
-* GSCRIPT_MODULE_SEARCH_PATH: Search path for GScript internal modules (.js).
+* *PATH*: Search path to binary application.
+* *LD_LIBRARY_PATH*: Search path to shared objects (.so) library.
+* *GI_TYPELIB_PATH*: Search path to GObject Introspection .typelib file.
+* *GLADE_CATALOG_SEARCH_PATH*: Search path to Glade catalog .xml file.
+* *GLADE_MODULE_SEARCH_PATH*: Search path to Glade plugin (.so) file.
+* *XDG_DATA_DIRS*: Search path to Glade palette icon.
+* *GSCRIPT_MODULE_SEARCH_PATH*: Search path for GScript internal modules (.js).
 
 ## Build all
 
