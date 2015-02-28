@@ -67,11 +67,28 @@ make
 
 ```shell
 g-script examples/calculator/calculator.ui
+```
+
+![screenshot](https://dl.dropboxusercontent.com/u/36581494/calculator.png "Screenshot")
+
+```shell
 g-script examples/phonebook/phonebook.ui
+```
+
+![screenshot](https://dl.dropboxusercontent.com/u/36581494/phonebook.png "Screenshot")
+
+```shell
 g-script examples/tuner/tuner.ui
+```
+
+![screenshot](https://dl.dropboxusercontent.com/u/36581494/tuner.png "Screenshot")
+
+```shell
 g-script examples/viewer/viewer.ui
 ```
 
-And enjoy (test) with Glade, tests and examples.
+![screenshot](https://dl.dropboxusercontent.com/u/36581494/viewer.png "Screenshot")
+
+And enjoy with Glade.
 
 Juan Manuel Mouriz <jmouriz@gmail.com>
