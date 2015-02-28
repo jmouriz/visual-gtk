@@ -32,7 +32,7 @@ In Ubuntu 14.10, install (at least) these packages:
 * gir1.2-gstreamer-1.0 (for guitar tuner example)
 * gir1.2-gda-5.0 (for phonebook example)
 
-```shell
+```
 $ apt-get install libcjs-dev libgladeui-dev libgtksourceview-3.0-dev libgirepository1.0-dev gir1.2-gda-5.0 gir1.2-gstreamer-1.0
 ```
 
@@ -40,13 +40,13 @@ And, of course, a C compiler, make and pkg-config utilities and you probably wan
 
 ## Get source
 
-```shell
+```
 git clone https://github.com/jmouriz/visual-gtk
 ```
 
 ## Set the environment
 
-```shell
+```
 cd visual-gtk
 . set-glade-environment.sh
 ```
@@ -63,7 +63,7 @@ This will exports:
 
 ## Build all
 
-```shell
+```
 make
 ```
 
