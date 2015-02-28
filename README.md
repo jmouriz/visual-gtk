@@ -65,26 +65,27 @@ make
 
 ## Run examples
 
-`g-script`[`examples/calculator/calculator.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/calculator/calculator.ui )
-[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/calculator/calculator.ui)
+`g-script` [`examples/calculator/calculator.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/calculator/calculator.ui)
+
+[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/calculator/calculator.ui)]
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/calculator.png "Screenshot")
 
-```shell
-g-script examples/phonebook/phonebook.ui
-```
+`g-script` [`examples/phonebook/phonebook.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/phonebook/phonebook.ui)
+
+[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/phonebook/phonebook.ui)]
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/phonebook.png "Screenshot")
 
-```shell
-g-script examples/tuner/tuner.ui
-```
+`g-script` [`examples/tuner/tuner.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/phonebook/phonebook.ui)
+
+[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/phonebook/phonebook.ui)]
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/tuner.png "Screenshot")
 
-```shell
-g-script examples/viewer/viewer.ui
-```
+`g-script` [`examples/viewer/viewer.ui`](https://github.com/jmouriz/visual-gtk/blob/master/examples/phonebook/phonebook.ui)
+
+[[Download](https://raw.githubusercontent.com/jmouriz/visual-gtk/master/examples/phonebook/phonebook.ui)]
 
 ![screenshot](https://dl.dropboxusercontent.com/u/36581494/viewer.png "Screenshot")
 
