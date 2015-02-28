@@ -28,7 +28,7 @@
 
 GLADE_MAKE_EPROP (GladeEPropJavascript, glade_eprop_javascript)
 
-static gboolean loaded = FALSE;
+static gboolean busy = FALSE;
 
 static void
 glade_eprop_javascript_finalize (GObject *object)
@@ -50,7 +50,7 @@ glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property
   /* Chain up */
   parent_class->load (eprop, property);
 
-  if (!property || loaded)
+  if (!property || busy)
   {
     return;
   }
@@ -66,10 +66,9 @@ glade_eprop_javascript_load (GladeEditorProperty *eprop, GladeProperty *property
     g_free (value);
   }
 
-  if (string) // && strlen (string) > 0)
+  if (string)
   {
     g_script_editor_set_javascript (G_SCRIPT_EDITOR (javascript->editor), string);
-    loaded = TRUE;
   }
 }
 
@@ -81,8 +80,9 @@ glade_eprop_javascript_edited (GScriptEditor *editor, const gchar *javascript, g
   g_value_init (&value, G_TYPE_STRING);
   g_value_take_string (&value, (gchar *) javascript);
   
-  g_signal_stop_emission_by_name ((gpointer) editor, "edited");
+  busy = TRUE;
   glade_editor_property_commit (GLADE_EDITOR_PROPERTY (data), &value);
+  busy = FALSE;
 }
 
 static GtkWidget *
